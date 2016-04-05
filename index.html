@@ -109,7 +109,13 @@
             
             function updateGameArea() {
                 var x, y;
-                var objSpeed = 180;
+                var intRate = 80;
+                var objRate;
+                objRate = Math.floor(intRate - Math.round((myGameArea.frameNo/60)));
+                if (objRate < 25) {
+                    objRate = 25;
+                }
+                var totalScore = Math.round(myGameArea.frameNo/60);
                 for (i = 0; i < myObstacles.length; i += 1) {
                     if (myGamePiece.crashWith(myObstacles[i])) {
                         myGameArea.stop();
@@ -118,7 +124,7 @@
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
-                if (myGameArea.frameNo == 1 || everyinterval(objSpeed)) {
+                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
                     myObstacles.push(new component(60, 20, "green", x, Math.floor(Math.random() * 270) + 1));
@@ -137,7 +143,7 @@
                 if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1.8; }
                 myGamePiece.newPos();
                 myGamePiece.update();
-                console.log(objSpeed);
+                console.log("Player score is " + totalScore + " and the object spawn delay is " + objRate + " ticks");
             }
         </script>
     </body>
