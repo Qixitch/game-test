@@ -77,6 +77,8 @@
                     this.y += this.speedY;
                     this.hitTop();
                     this.hitBottom();
+                    this.hitLeft();
+                    this.hitRight();
                 }
                 this.hitTop = function() {
                     var areatop = 0;
@@ -88,6 +90,18 @@
                     var areabottom = myGameArea.canvas.height - this.height;
                     if (this.y > areabottom) {
                         this.y = areabottom;
+                    }
+                }
+                this.hitLeft = function() {
+                    var arealeft = 0;
+                    if (this.x < arealeft) {
+                        this.x = arealeft;
+                    }
+                }
+                this.hitRight = function() {
+                    var arearight = myGameArea.canvas.width - this.width;
+                    if (this.x > arearight) {
+                        this.x = arearight;
                     }
                 }
                 this.crashWith = function(otherobj) {
