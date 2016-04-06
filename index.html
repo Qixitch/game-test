@@ -5,6 +5,18 @@
                 border: 1px solid #d3d3d3;
                 background-color: #f1f1f1;
             }
+            .buttonUp::after {
+                content: "UP";
+            }
+            .buttonDown::after {
+                content: "DOWN";
+            }
+            .buttonLeft::after {
+                content: "LEFT";
+            }
+            .buttonRight::after {
+                content: "RIGHT";
+            }
         </style>
     </head>
     <body onload="startGame()">
@@ -215,41 +227,59 @@
                 }
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0;
-                if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1.8; }
-                if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1.8; }
-                if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1.8; }
-                if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1.8; }
+                if (myGameArea.keys && myGameArea.keys[37] || checkMoveleft) {myGamePiece.speedX = -1.8; }
+                if (myGameArea.keys && myGameArea.keys[39] || checkMoveright) {myGamePiece.speedX = 1.8; }
+                if (myGameArea.keys && myGameArea.keys[38] || checkMoveup) {myGamePiece.speedY = -1.8; }
+                if (myGameArea.keys && myGameArea.keys[40] || checkMovedown) {myGamePiece.speedY = 1.8; }
                 myGamePiece.newPos();
                 myGamePiece.update();
             }
-            
+            var checkMoveup = false;
+            var checkMovedown = false;
+            var checkMoveleft = false;
+            var checkMoveright = false;
             function moveup() {
-                myGamePiece.speedY -= 1.8; 
+                checkMoveup = true;
+                checkMovedown = false;
+                checkMoveleft = false;
+                checkMoveright = false;
             }
-
             function movedown() {
-                myGamePiece.speedY += 1.8; 
+                checkMovedown = true;
+                checkMoveup = false;
+                checkMoveleft = false;
+                checkMoveright = false;
             }
             
             function moveleft() {
-                myGamePiece.speedX -= 1.8;
+                checkMoveleft = true;
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveright = false;
             }
 
             function moveright() {
-                myGamePiece.speedX += 1.8;
+                checkMoveright = true;
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveleft = false;
             }
             
             function stopMove() {
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveleft = false;
+                checkMoveright = false;
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0; 
             }
         </script>
         <br /><br />
         <div style="text-align:center;width:480px;">
-            <button onmousedown="moveup()">UP</button><br><br>
-            <button onmousedown="moveleft()">LEFT</button>
-            <button onmousedown="moveright()">RIGHT</button><br><br>
-            <button onmousedown="movedown()">DOWN</button>
+            <button class="buttonUp" onmousedown="moveup()" onmouseup="stopMove()"></button><br><br>
+            <button class="buttonLeft" onmousedown="moveleft()" onmouseup="stopMove()"></button>
+            <button class="buttonRight" onmousedown="moveright()" onmouseup="stopMove()"></button><br><br>
+            <button class="buttonDown" onmousedown="movedown()" onmouseup="stopMove()"></button>
         </div>
         Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br /><br />
         <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=nOtVeRyCrEaTiVe&repo=game-test&limit=2"
