@@ -33,6 +33,10 @@
                     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
                     this.frameNo = 0; 
                     this.interval = setInterval(updateGameArea, 20);
+                    window.addEventListener('touchmove', function (e) {
+                        myGameArea.x = e.touches[0].screenX;
+                        myGameArea.y = e.touches[0].screenY;
+                    })
                     window.addEventListener('keydown', function (e) {
                         myGameArea.keys = (myGameArea.keys || []);
                         myGameArea.keys[e.keyCode] = true;
@@ -183,6 +187,10 @@
                     myCollectionScore += 1;
                 }
                 myGameArea.clear();
+                if (myGameArea.touchX && myGameArea.touchY) {
+                    myGamePiece.x = myGameArea.x;
+                    myGamePiece.y = myGameArea.y; 
+                }
                 myGameArea.frameNo += 1;
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
@@ -202,7 +210,7 @@
                     myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                myScore.text = "PLEASURE: " + Math.round((myGameArea.frameNo/60) + myCollectionScore);
+                myScore.text = "Score: " + Math.round((myGameArea.frameNo/60) + myCollectionScore);
                 myScore.update();
                 var enableStat = document.getElementById("show-stats").checked;
                 if (enableStat) {
