@@ -8,6 +8,9 @@
             span {
                 border: 1px solid #d3d3d3;
                 background-color: #f1f1f1;
+                padding: 3px;
+                margin-left: 6px;
+                margin-right: 6px;
             }
             .buttonUp::after {
                 content: "UP";
@@ -24,6 +27,11 @@
         </style>
     </head>
     <body onload="startGame()">
+        <script>
+            function reloadPage() {
+        location.reload();
+            }
+        </script>
         <script>
             function startGame() {
                 myGamePiece = new component(30, 40, "player.png", 10, 120, "image");
@@ -197,6 +205,7 @@
                         myCollection[i].y += -9000;
                         myCollection[i].update();
                     } 
+                    updateCollectionScore();
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
@@ -278,20 +287,17 @@
                 myGamePiece.speedY = 0; 
             }
         </script>
-        <br /><br />
+        <br><br>
         <div style="text-align:center;width:480px;">
-            <button href="#" onmousedown="moveup()" onmouseup="stopMove()" onmousedown="moveup()" onmouseup="stopMove()" onmouseover="moveup()" onmouseout="stopMove()" onclick="void(0)">UP</button><br><br>
-            <button href="#" onmousedown="moveleft()" onmouseup="stopMove()" onmousedown="moveleft()" onmouseup="stopMove()" onmouseover="moveleft()" onmouseout="stopMove()" onclick="void(0)">LEFT</button>
-            <button href="#" onmousedown="moveright()" onmouseup="stopMove()" onmousedown="moveright()" onmouseup="stopMove()" onmouseover="moveright()" onmouseout="stopMove()" onclick="void(0)">RIGHT</button><br><br>
-            <button href="#" onmousedown="movedown()" onmouseup="stopMove()" onmousedown="movedown()" onmouseup="stopMove()" onmouseover="movedown()" onmouseout="stopMove()" onclick="void(0)">DOWN</button>
-        </div><br />
-        <div style="text-align:center;width:480px;">
-            <span onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" onclick="void(0)">UP</span><br><br>
-            <span onmouseover="moveleft()" onmouseout="stopMove()" ontouchend="stopMove()" onclick="void(0)">LEFT</span>
-            <span onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" onclick="void(0)">RIGHT</span><br><br>
-            <span onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" onclick="void(0)">DOWN</span>
+            Dodge the RED BOXES and collect whips to increase Nathan's pleasure!<br>
+            Use the ARROW KEYS or the controls below to move Nathan<br><br>
+            <span onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">UP</span><br><br>
+            <span onmouseover="moveleft()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">LEFT</span>
+            <span onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br>
+            <span onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span>
         </div>
-        Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br /><br />
+        Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br><br>
+        <button onclick="reloadPage()">Reset Game</button><br><br>
         <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=nOtVeRyCrEaTiVe&repo=game-test&limit=2"
   allowtransparency="true" frameborder="0" scrolling="no" width="482px" height="206px"></iframe>
     </body>
