@@ -33,10 +33,6 @@
                     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
                     this.frameNo = 0; 
                     this.interval = setInterval(updateGameArea, 20);
-                    window.addEventListener('touchmove', function (e) {
-                        myGameArea.x = e.touches[0].screenX;
-                        myGameArea.y = e.touches[0].screenY;
-                    })
                     window.addEventListener('keydown', function (e) {
                         myGameArea.keys = (myGameArea.keys || []);
                         myGameArea.keys[e.keyCode] = true;
@@ -187,10 +183,6 @@
                     myCollectionScore += 1;
                 }
                 myGameArea.clear();
-                if (myGameArea.touchX && myGameArea.touchY) {
-                    myGamePiece.x = myGameArea.x;
-                    myGamePiece.y = myGameArea.y; 
-                }
                 myGameArea.frameNo += 1;
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
@@ -230,10 +222,37 @@
                 myGamePiece.newPos();
                 myGamePiece.update();
             }
+            
+            function moveup() {
+                myGamePiece.speedY -= 1.8; 
+            }
+
+            function movedown() {
+                myGamePiece.speedY += 1.8; 
+            }
+            
+            function moveleft() {
+                myGamePiece.speedX -= 1.8;
+            }
+
+            function moveright() {
+                myGamePiece.speedX += 1.8;
+            }
+            
+            function stopMove() {
+                myGamePiece.speedX = 0;
+                myGamePiece.speedY = 0; 
+            }
         </script>
-        <br />
+        <br /><br />
+        <div style="text-align:center;width:480px;">
+            <button onmousedown="moveup()">UP</button><br><br>
+            <button onmousedown="moveleft()">LEFT</button>
+            <button onmousedown="moveright()">RIGHT</button><br><br>
+            <button onmousedown="movedown()">DOWN</button>
+        </div>
+        Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br /><br />
         <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=nOtVeRyCrEaTiVe&repo=game-test&limit=2"
   allowtransparency="true" frameborder="0" scrolling="no" width="482px" height="206px"></iframe>
-        Display Object Stats <input type="checkbox" id="show-stats" checked="checked" />
     </body>
 </html>
