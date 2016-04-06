@@ -18,6 +18,7 @@
             
             var myGamePiece;
             var myObstacles = [];
+            var myCollection = [];
             var myScore;
             var myStats;
             
@@ -129,6 +130,8 @@
                 var intSpeed = 1;
                 var objRate;
                 var objSpeed;
+                var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
+                var collectionSpeed = intSpeed;
                 objRate = Math.floor(intRate - Math.round((myGameArea.frameNo/60)));
                 if (objRate < 12) {
                     objRate = 12;
@@ -151,6 +154,15 @@
                 for (i = 0; i < myObstacles.length; i += 1) {
                     myObstacles[i].x += -objSpeed;
                     myObstacles[i].update();
+                }
+                if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myCollection.push(new component(10, 10, "blue", x, Math.floor(Math.random() * 270) + 1));
+                }
+                for (i = 0; i < myCollection.length; i += 1) {
+                    myCollection[i].x += -collectionSpeed;
+                    myCollection[i].update();
                 }
                 myStats.text = "Player score is " + totalScore + ", the collectable spawn delay is " + collectionRate + " the object spawn delay is " + objRate + " ticks and the object speed is " + objSpeed;
                 myStats.update();
