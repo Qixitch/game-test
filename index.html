@@ -124,11 +124,14 @@
             function updateGameArea() {
                 var x, y;
                 var intRate = 80;
+                var intSpeed = 1;
                 var objRate;
+                var objSpeed;
                 objRate = Math.floor(intRate - Math.round((myGameArea.frameNo/60)));
-                if (objRate < 25) {
-                    objRate = 25;
+                if (objRate < 12) {
+                    objRate = 12;
                 }
+                objSpeed = intSpeed + (myGameArea.frameNo/640);
                 var totalScore = Math.round(myGameArea.frameNo/60);
                 for (i = 0; i < myObstacles.length; i += 1) {
                     if (myGamePiece.crashWith(myObstacles[i])) {
@@ -144,7 +147,7 @@
                     myObstacles.push(new component(60, 20, "green", x, Math.floor(Math.random() * 270) + 1));
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
-                    myObstacles[i].x += -1;
+                    myObstacles[i].x += -objSpeed;
                     myObstacles[i].update();
                 }
                 myScore.text = "SCORE: " + Math.round(myGameArea.frameNo/60);
