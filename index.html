@@ -35,6 +35,7 @@
             var myCollection = [];
             var myScore;
             var myStats;
+            var myCollectionScore;
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -161,6 +162,10 @@
                 }
             }
             
+            function updateCollectionScore() {
+                myCollectionScore += 1;
+            }
+            
             function updateGameArea() {
                 var x, y;
                 var intRate = 80;
@@ -169,8 +174,6 @@
                 var objSpeed;
                 var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
                 var collectionSpeed = 2;
-                var myCollectionScore;
-                var updateCollectionScore;
                 myCollectionScore = 0;
                 objRate = Math.floor(intRate - Math.round((myGameArea.frameNo/60)));
                 if (objRate < 12) {
@@ -186,13 +189,10 @@
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     if (myGamePiece.crashWithScore(myCollection[i])) {
-                        updateCollectionScore = true;
+                        updateCollectionScore();
                         myCollection[i].y += -9000;
                         myCollection[i].update();
                     } 
-                }
-                if (updateCollectionScore) {
-                    myCollectionScore += 1;
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
@@ -214,7 +214,7 @@
                     myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                myScore.text = "Score: " + Math.round((myGameArea.frameNo/60) + myCollectionScore);
+                myScore.text = "Pleasure: " + Math.round((myGameArea.frameNo/60) + myCollectionScore);
                 myScore.update();
                 var enableStat = document.getElementById("show-stats").checked;
                 if (enableStat) {
@@ -276,10 +276,10 @@
         </script>
         <br /><br />
         <div style="text-align:center;width:480px;">
-            <button class="buttonUp" onmousedown="moveup()" onmouseup="stopMove()" onfocus="moveup()"></button><br><br>
-            <button class="buttonLeft" onmousedown="moveleft()" onmouseup="stopMove()" onfocus="moveleft()"></button>
-            <button class="buttonRight" onmousedown="moveright()" onmouseup="stopMove()" onfocus="moveright()"></button><br><br>
-            <button class="buttonDown" onmousedown="movedown()" onmouseup="stopMove()" onfocus="movedown()"></button>
+            <button class="buttonUp" onmousedown="moveup()" onmouseup="stopMove()" touchstart="moveup()" touchend="stopMove()"></button><br><br>
+            <button class="buttonLeft" onmousedown="moveleft()" onmouseup="stopMove()" touchstart="moveleft()" touchend="stopMove()"></button>
+            <button class="buttonRight" onmousedown="moveright()" onmouseup="stopMove()" touchstart="moveright()" touchend="stopMove()"></button><br><br>
+            <button class="buttonDown" onmousedown="movedown()" onmouseup="stopMove()" touchstart="movedown()" touchend="stopMove()"></button>
         </div>
         Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br /><br />
         <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=nOtVeRyCrEaTiVe&repo=game-test&limit=2"
