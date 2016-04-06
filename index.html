@@ -10,9 +10,11 @@
     <body onload="startGame()">
         <script>
             function startGame() {
-                myGamePiece = new component(30, 30, "red", 10, 120);
+                myGamePiece = new component(30, 40, "player.png", 10, 120, "image");
                 myScore = new component("18px", "Consolas", "black", 350, 40, "text");
-                myStats = new component("7px", "Consolas", "black", 5, 265, "text");
+                myStatPlayer = new component("7px", "Consolas", "black", 5, 249, "text");
+                myStatCollection = new component("7px", "Consolas", "black", 5, 257, "text");
+                myStatObject = new component("7px", "Consolas", "black", 5, 265, "text");
                 myGameArea.start();
             }
             
@@ -58,6 +60,10 @@
             
             function component(width, height, color, x, y, type) {
                 this.type = type;
+                if (type == "image") {
+                    this.image = new Image();
+                    this.image.src = color;
+                }
                 this.width = width;
                 this.height = height;
                 this.speedX = 0;
@@ -71,8 +77,12 @@
                         ctx.fillStyle = color;
                         ctx.fillText(this.text, this.x, this.y);
                     } else {
-                        ctx.fillStyle = color;
-                        ctx.fillRect(this.x, this.y, this.width, this.height);
+                        if (type == "image") {
+                            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+                        } else {
+                            ctx.fillStyle = color;
+                            ctx.fillRect(this.x, this.y, this.width, this.height);
+                        }
                     }
                 }
                 this.newPos = function() {
@@ -122,6 +132,21 @@
                     }
                     return crash;
                 }
+                this.crashWithScore = function(otherobjA) {
+                    var myleftA = this.x;
+                    var myrightA = this.x + (this.width);
+                    var mytopA = this.y;
+                    var mybottomA = this.y + (this.height);
+                    var otherleftA = otherobjA.x;
+                    var otherrightA = otherobjA.x + (otherobjA.width);
+                    var othertopA = otherobjA.y;
+                    var otherbottomA = otherobjA.y + (otherobjA.height);
+                    var crashScore = true;
+                    if ((mybottomA < othertopA) || (mytopA > otherbottomA) || (myrightA < otherleftA) || (myleftA > otherrightA)) {
+                        crashScore = false;
+                    }
+                    return crashScore;
+                }
             }
             
             function updateGameArea() {
@@ -131,7 +156,10 @@
                 var objRate;
                 var objSpeed;
                 var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
-                var collectionSpeed = intSpeed;
+                var collectionSpeed = 2;
+                var myCollectionScore;
+                var updateCollectionScore;
+                myCollectionScore = 0;
                 objRate = Math.floor(intRate - Math.round((myGameArea.frameNo/60)));
                 if (objRate < 12) {
                     objRate = 12;
@@ -144,12 +172,22 @@
                         return;
                     } 
                 }
+                for (i = 0; i < myCollection.length; i += 1) {
+                    if (myGamePiece.crashWithScore(myCollection[i])) {
+                        updateCollectionScore = true;
+                        myCollection[i].y += -9000;
+                        myCollection[i].update();
+                    } 
+                }
+                if (updateCollectionScore) {
+                    myCollectionScore += 1;
+                }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myObstacles.push(new component(60, 20, "green", x, Math.floor(Math.random() * 270) + 1));
+                    myObstacles.push(new component(60, 20, "red", x, Math.floor(Math.random() * 270) + 1));
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
                     myObstacles[i].x += -objSpeed;
@@ -158,16 +196,23 @@
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(10, 10, "blue", x, Math.floor(Math.random() * 270) + 1));
+                    myCollection.push(new component(30, 30, "whip.png", x, Math.floor(Math.random() * 270) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                myStats.text = "Player score is " + totalScore + ", the collectable spawn delay is " + collectionRate + " the object spawn delay is " + objRate + " ticks and the object speed is " + objSpeed;
-                myStats.update();
-                myScore.text = "SCORE: " + Math.round(myGameArea.frameNo/60);
+                myScore.text = "PLEASURE: " + Math.round((myGameArea.frameNo/60) + myCollectionScore);
                 myScore.update();
+                var enableStat = document.getElementById("show-stats").checked;
+                if (enableStat) {
+                    myStatPlayer.text = "Time elapsed = " + totalScore + " seconds, objects collected = " + myCollectionScore;
+                    myStatPlayer.update();
+                    myStatCollection.text = "The collectable spawn delay is " + collectionRate + " ticks and the collectable speed is " + collectionSpeed;
+                    myStatCollection.update();
+                    myStatObject.text = "The object spawn delay is " + objRate + " ticks and the object speed is " + objSpeed;
+                    myStatObject.update();
+                }
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0;
                 if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1.8; }
@@ -179,7 +224,8 @@
             }
         </script>
         <br />
-        <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=Qixitch&repo=game-test&limit=2"
+        <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=nOtVeRyCrEaTiVe&repo=game-test&limit=2"
   allowtransparency="true" frameborder="0" scrolling="no" width="482px" height="206px"></iframe>
+        Display Object Stats <input type="checkbox" id="show-stats" checked="checked" />
     </body>
 </html>
