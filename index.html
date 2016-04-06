@@ -49,7 +49,7 @@
             var myCollection = [];
             var myScore;
             var myStats;
-            var myCollectionScore;
+            var myCollectionScore = 0;
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -176,10 +176,6 @@
                 }
             }
             
-            function updateCollectionScore() {
-                myCollectionScore += 8;
-            }
-            
             function updateGameArea() {
                 var x, y;
                 var intRate = 80;
@@ -188,7 +184,6 @@
                 var objSpeed;
                 var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
                 var collectionSpeed = 2;
-                myCollectionScore = 0;
                 objRate = Math.floor(intRate - Math.round((myGameArea.frameNo/60)));
                 if (objRate < 12) {
                     objRate = 12;
@@ -206,7 +201,11 @@
                         updateCollectionScore();
                         myCollection[i].y += -9000;
                         myCollection[i].update();
+                        return;
                     }
+                }
+                function updateCollectionScore() {
+                    myCollectionScore += 1;
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
@@ -228,7 +227,7 @@
                     myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                myScore.text = "Pleasure: " + Math.round((myGameArea.frameNo/60) + myCollectionScore);
+                myScore.text = "Pleasure: " + Math.round((myGameArea.frameNo/60) + (myCollectionScore * 8));
                 myScore.update();
                 var enableStat = document.getElementById("show-stats").checked;
                 if (enableStat) {
@@ -295,7 +294,8 @@
             <span onmouseover="stopMove()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">IDLE</span>
             <span onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
             <span onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
-            Dodge the RED BOXES and collect whips to increase Nathan's pleasure!<br>
+            <strong>A TYPICAL NIGHT AT NATHAN'S HOUSE - THE GAME</strong><br>
+            Dodge the RED BOXES and collect WHIPS to increase Nathan's pleasure!<br>
             Use the ARROW KEYS or the controls above to move Nathan<br><br>
         </div><br><br>
         Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br><br>
