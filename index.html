@@ -12,12 +12,14 @@
             function startGame() {
                 myGamePiece = new component(30, 30, "red", 10, 120);
                 myScore = new component("18px", "Consolas", "black", 350, 40, "text");
+                myStats = new component("7px", "Consolas", "black", 5, 265, "text");
                 myGameArea.start();
             }
             
             var myGamePiece;
             var myObstacles = [];
             var myScore;
+            var myStats;
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -150,6 +152,8 @@
                     myObstacles[i].x += -objSpeed;
                     myObstacles[i].update();
                 }
+                myStats.text = "Player score is " + totalScore + ", the collectable spawn delay is " + collectionRate + " the object spawn delay is " + objRate + " ticks and the object speed is " + objSpeed;
+                myStats.update();
                 myScore.text = "SCORE: " + Math.round(myGameArea.frameNo/60);
                 myScore.update();
                 myGamePiece.speedX = 0;
@@ -160,7 +164,6 @@
                 if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1.8; }
                 myGamePiece.newPos();
                 myGamePiece.update();
-                console.log("Player score is " + totalScore + " and the object spawn delay is " + objRate + " ticks");
             }
         </script>
         <br />
