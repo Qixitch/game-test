@@ -10,7 +10,7 @@
                 border: 1px solid #d3d3d3;
                 background-color: #f1f1f1;
             }
-            span {
+            .control-button {
                 border: 1px solid #d3d3d3;
                 background-color: #f1f1f1;
                 padding: 8px;
@@ -238,9 +238,9 @@
                 if (enableStat) {
                     myStatPlayer.text = "Time elapsed = " + totalScore + " seconds, objects collected = " + myCollectionScore;
                     myStatPlayer.update();
-                    myStatCollection.text = "The collectable spawn delay is " + collectionRate + " ticks and the collectable speed is " + collectionSpeed;
+                    myStatCollection.text = "The collectable spawn delay is " + collectionRate + " intervals and the collectable speed is " + collectionSpeed;
                     myStatCollection.update();
-                    myStatObject.text = "The obstacle spawn delay is " + objRate + " ticks and the obstacle speed is " + objSpeed;
+                    myStatObject.text = "The obstacle spawn delay is " + objRate + " intervals and the obstacle speed is " + objSpeed;
                     myStatObject.update();
                 }
                 myStatVersion.text = "version " + gameVersion;
@@ -296,11 +296,11 @@
         </script>
         <br><br>
         <div style="text-align:center;width:480px;">
-            <span style="padding-left: 24px; padding-right: 24px;" onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">UP</span><br><br><br>
-            <span style="padding-left: 16px; padding-right: 16px;" onmouseover="moveleft()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">LEFT</span>
-            <span style="padding-left: 15px; padding-right: 15px;" onmouseover="stopMove()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">IDLE</span>
-            <span onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
-            <span onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
+            <span class="control-button" style="padding-left: 24px; padding-right: 24px;" onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">UP</span><br><br><br>
+            <span class="control-button" style="padding-left: 16px; padding-right: 16px;" onmouseover="moveleft()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">LEFT</span>
+            <span class="control-button" style="padding-left: 15px; padding-right: 15px;" onmouseover="stopMove()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">IDLE</span>
+            <span class="control-button" onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
+            <span class="control-button" onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
             <div style="font-size:12px;">
                 <strong>A TYPICAL NIGHT AT NATHAN'S HOUSE - THE GAME</strong><br>
                 Dodge the SALT SHAKERS while collecting WHIPS to increase Nathan's pleasure!<br>
