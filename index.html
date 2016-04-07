@@ -3,6 +3,9 @@
         <title>Typical Night at Nathan's</title>
         <meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <style>
+            * {
+                font-family: "Comic Sans MS";
+            }
             canvas {
                 border: 1px solid #d3d3d3;
                 background-color: #f1f1f1;
@@ -37,11 +40,11 @@
         <script>
             function startGame() {
                 myGamePiece = new component(30, 40, "player.png", 10, 120, "image");
-                myScore = new component("18px", "Consolas", "black", 12, 22, "text");
-                myStatPlayer = new component("7px", "Consolas", "black", 5, 249, "text");
-                myStatCollection = new component("7px", "Consolas", "black", 5, 257, "text");
-                myStatObject = new component("7px", "Consolas", "black", 5, 265, "text");
-                myStatVersion = new component("7px", "Consolas", "black", 420, 265, "text");
+                myScore = new component("18px", "Comic Sans MS", "black", 12, 22, "text");
+                myStatPlayer = new component("7px", "Comic Sans MS", "black", 5, 249, "text");
+                myStatCollection = new component("7px", "Comic Sans MS", "black", 5, 257, "text");
+                myStatObject = new component("7px", "Comic Sans MS", "black", 5, 265, "text");
+                myStatVersion = new component("7px", "Comic Sans MS", "black", 420, 265, "text");
                 myGameArea.start();
             }
             
@@ -51,7 +54,7 @@
             var myScore;
             var myStats;
             var myCollectionScore = 0;
-            var gameVersion = "0.1.12";
+            var gameVersion = "0.1.13";
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -298,11 +301,13 @@
             <span onmouseover="stopMove()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">IDLE</span>
             <span onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
             <span onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
-            <strong>A TYPICAL NIGHT AT NATHAN'S HOUSE - THE GAME</strong><br>
-            Dodge the SALT SHAKERS while collecting WHIPS to increase Nathan's pleasure!<br>
-            Use the ARROW KEYS or the controls above to move Nathan<br><br>
-        </div><br><br>
-        Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br><br>
-        <button onclick="reloadPage()">Reset Game</button><br><br>
+            <div style="font-size:12px;">
+                <strong>A TYPICAL NIGHT AT NATHAN'S HOUSE - THE GAME</strong><br>
+                Dodge the SALT SHAKERS while collecting WHIPS to increase Nathan's pleasure!<br>
+                Use the ARROW KEYS or the controls above to move Nathan<br><br>
+            </div>
+            <button style="margin-right: 32px;" onclick="reloadPage()">Reset Game</button>
+            Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br><br>
+        </div>
     </body>
 </html>
