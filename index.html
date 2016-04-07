@@ -37,10 +37,11 @@
         <script>
             function startGame() {
                 myGamePiece = new component(30, 40, "player.png", 10, 120, "image");
-                myScore = new component("18px", "Consolas", "black", 350, 40, "text");
+                myScore = new component("18px", "Consolas", "black", 12, 22, "text");
                 myStatPlayer = new component("7px", "Consolas", "black", 5, 249, "text");
                 myStatCollection = new component("7px", "Consolas", "black", 5, 257, "text");
                 myStatObject = new component("7px", "Consolas", "black", 5, 265, "text");
+                myStatVersion = new component("7px", "Consolas", "black", 420, 265, "text");
                 myGameArea.start();
             }
             
@@ -50,6 +51,7 @@
             var myScore;
             var myStats;
             var myCollectionScore = 0;
+            var gameVersion = "0.1.12";
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -212,7 +214,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myObstacles.push(new component(34, 20, "salt.png", x, Math.floor(Math.random() * 270) + 1, "image"));
+                    myObstacles.push(new component(34, 20, "salt.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
                     myObstacles[i].x += -objSpeed;
@@ -221,7 +223,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(30, 30, "whip.png", x, Math.floor(Math.random() * 270) + 1, "image"));
+                    myCollection.push(new component(30, 30, "whip.png", x, Math.floor(Math.random() * 240) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     myCollection[i].x += -collectionSpeed;
@@ -238,6 +240,8 @@
                     myStatObject.text = "The obstacle spawn delay is " + objRate + " ticks and the obstacle speed is " + objSpeed;
                     myStatObject.update();
                 }
+                myStatVersion.text = "version " + gameVersion;
+                myStatVersion.update();
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0;
                 if (myGameArea.keys && myGameArea.keys[37] || checkMoveleft) {myGamePiece.speedX = -1.8; }
