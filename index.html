@@ -54,7 +54,7 @@
             var myScore;
             var myStats;
             var myCollectionScore = 0;
-            var gameVersion = "0.1.13";
+            var gameVersion = "0.1.14";
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -247,10 +247,10 @@
                 myStatVersion.update();
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0;
-                if (myGameArea.keys && myGameArea.keys[37] || checkMoveleft) {myGamePiece.speedX = -1.8; }
-                if (myGameArea.keys && myGameArea.keys[39] || checkMoveright) {myGamePiece.speedX = 1.8; }
-                if (myGameArea.keys && myGameArea.keys[38] || checkMoveup) {myGamePiece.speedY = -1.8; }
-                if (myGameArea.keys && myGameArea.keys[40] || checkMovedown) {myGamePiece.speedY = 1.8; }
+                if (myGameArea.keys && myGameArea.keys[37] || myGameArea.keys && myGameArea.keys[65] || checkMoveleft) {myGamePiece.speedX = -1.8; }
+                if (myGameArea.keys && myGameArea.keys[39] || myGameArea.keys && myGameArea.keys[68] || checkMoveright) {myGamePiece.speedX = 1.8; }
+                if (myGameArea.keys && myGameArea.keys[38] || myGameArea.keys && myGameArea.keys[87] || checkMoveup) {myGamePiece.speedY = -1.8; }
+                if (myGameArea.keys && myGameArea.keys[40] || myGameArea.keys && myGameArea.keys[83] || checkMovedown) {myGamePiece.speedY = 1.8; }
                 myGamePiece.newPos();
                 myGamePiece.update();
             }
@@ -304,7 +304,7 @@
             <div style="font-size:12px;">
                 <strong>A TYPICAL NIGHT AT NATHAN'S HOUSE - THE GAME</strong><br>
                 Dodge the SALT SHAKERS while collecting WHIPS to increase Nathan's pleasure!<br>
-                Use the ARROW KEYS or the controls above to move Nathan<br><br>
+                Use the ARROW KEYS, WASD or the controls above to move Nathan<br><br>
             </div>
             <button style="margin-right: 32px;" onclick="reloadPage()">Reset Game</button>
             Display Object Stats <input type="checkbox" id="show-stats" checked="checked" /><br><br>
