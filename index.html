@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="assets/bootstrap.css">
         <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
     </head>
-    <body class="container mainElement" onload="startGame()" style="text-align:center;">
+    <body class="mainElement" onload="startGame()">
         <script>
             function reloadPage() {
         location.reload();
@@ -315,8 +315,8 @@
             }
         </script>
         <br><br>
-        <div style="text-align:center;">
-            <div class="mainBox">
+        <div class="mainBox">
+            <div class="center">
                 <span class="btn btn-info control-button" style="padding-left: 24px; padding-right: 24px;" onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">UP</span><br><br><br>
                 <span class="btn btn-info control-button" style="padding-left: 16px; padding-right: 16px;" onmouseover="moveleft()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">LEFT</span>
                 <span class="btn btn-info control-button" style="padding-left: 15px; padding-right: 15px;" onmouseover="stopMove()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">IDLE</span>
