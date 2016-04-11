@@ -4,6 +4,7 @@
 
 .mainElement {
     background-color: #252525;
+    color: #ffffff;
 }
 
 canvas {
@@ -30,4 +31,89 @@ canvas {
     max-width: 930px;
     padding-top: 12px;
     padding-bottom: 12px;
+}
+
+.thumbnailFloat {
+    float: left;
+    display: inline-block;
+    width: 300px;
+}
+
+.thumbnailImage {
+    width: 290px;
+    height: 244px;
+    margin: 0;
+    background-color: #525252;
+}
+
+.thumbnailHeader {
+    font-size: 18px;
+    color: #000;
+    font-size: 14px;
+}
+
+.thumbnailAuthors {
+    text-align: center;
+    padding-top: 4px;
+    color: #000;
+    font-size: 13px;
+}
+
+.thumbnailBanner {
+    height: 40px;
+    background-color: rgba(255,255,255,0.7);
+    padding: 6px;
+    overflow: hidden;
+}
+
+.thumbnailLabels {
+    display: inline-block;
+    position: relative;
+    padding-top: 177px;
+    padding-left: 8px;
+}
+
+.thumbnailButton {
+    width: 290px;
+}
+
+.mapLabel {
+    display: inline-block;
+    margin-top: 2px;
+    padding-bottom: 3px;
+}
+
+.mapGamemode {
+    font-size: 9px;
+    color: #4a4a4a;
+}
+
+.gamemodeLink,
+.gamemodeLink:focus,
+.gamemodeLink:hover {
+    color: #4a4a4a;
+}
+
+.selectionContainer {
+  padding-right: 100px !important;
+  padding-left: 100px !important;
+}
+
+.btn-info-disabled {
+  color: #fff;
+  background-color: #9ac5d1;
+  border-color: #a9b8bc;
+}
+
+.btn-info-disabled:focus,
+.btn-info-disabled:hover, {
+  color: #c6c6c6 !important;
+  background-color: #82a8b2 !important;
+  border-color: #909b9f !important;
+}
+
+.disable-text,
+.disable-text:focus,
+.disable-text:hover {
+    color: #ffffff;
 }
