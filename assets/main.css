@@ -2,9 +2,9 @@
     font-family: 'Josefin Sans', sans-serif;
 }
 
-.mainElement {
-    background-color: #252525;
-    color: #ffffff;
+body {
+    background-color: #252525 !important;
+    color: #ffffff !important;
 }
 
 canvas {

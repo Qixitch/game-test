@@ -6,7 +6,8 @@
         <link rel="stylesheet" href="assets/bootstrap.css">
         <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
     </head>
-    <body class="mainElement container" onload="loadScores()">
+    <body onload="loadScores()">
+        <div class="container">
         <h3>&nbsp;&nbsp;&nbsp;A TYPICAL NIGHT AT NATHAN'S HOUSE - THE GAME</h3>
         <h4>&nbsp;&nbsp;&nbsp;Gamemode Selection</h4>
         <!-- Original -->
@@ -91,5 +92,6 @@
                 document.getElementById("classic-best").innerHTML = cacheJS.get({id: "valueScoreHigh"});
             }
         </script>
+        </div>
     </body>
 </html>
