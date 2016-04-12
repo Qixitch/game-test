@@ -167,7 +167,7 @@
             
             function updateGameArea() {
                 var x, y;
-                var intRate = 80;
+                var intRate = 65;
                 var intSpeed = 1;
                 var objRate;
                 var objSpeed;
@@ -182,7 +182,7 @@
                 if (objRate < 10) {
                     objRate = 10;
                 }
-                objSpeed = intSpeed + (myGameArea.frameNo/640);
+                objSpeed = intSpeed + (myGameArea.frameNo/475);
                 totalScore = Math.round(myGameArea.frameNo/60);
                 for (i = 0; i < myObstacles.length; i += 1) {
                     if (myGamePiece.crashWith(myObstacles[i])) {
@@ -217,9 +217,9 @@
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
                     if (objSpeed < 8) {
-                        myObstacles.push(new component(34, 20, "salt.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                        myObstacles.push(new component(45, 27, "salt.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                     } else {
-                        myObstacles.push(new component(34, 20, "salt-red.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                        myObstacles.push(new component(58, 34, "salt-red.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                     }
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
@@ -235,7 +235,7 @@
                     myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                realScore = (36 + (myCollectionScore * 8)) - (Math.round(myGameArea.frameNo/60) + (saltTouched * 18));
+                realScore = (36 + (myCollectionScore * 5)) - (Math.round(myGameArea.frameNo/60) + (saltTouched * 21));
                 myScore.text = "Score: " + realScore;
                 myScore.update();
                 var enableStat = document.getElementById("show-stats").checked;
@@ -335,8 +335,8 @@
                     Use the ARROW KEYS, WASD or the controls above to move Nathan<br><br>
                 </div>
                 <div class="well center" style="max-width:360px;">
-                    Best Time: <span id="high-score-1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Previous Time: <span id="recent-score-1">0</span>
+                    Best Time: <span id="high-score-1">0</span> seconds&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Previous Time: <span id="recent-score-1">0</span> seconds
                 </div>
                 <button class="btn btn-success" style="margin-right: 32px;" onclick="reloadPage()">Reload Game</button>
                 <button class="btn btn-danger" style="margin-right: 32px;" onclick="resetScores()">Reset Scores</button>
