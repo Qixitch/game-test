@@ -3,7 +3,7 @@
 }
 
 body {
-    background-color: #252525 !important;
+    background-color: #202020 !important;
     color: #ffffff !important;
 }
 
@@ -113,4 +113,24 @@ canvas {
 .disable-text:focus,
 .disable-text:hover {
     color: #ffffff;
+}
+
+.container-non-responsive {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 970px;
+}
+
+.header {
+    font-size: 38px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.strikeThru {
+    text-decoration: line-through;
+    font-size: 26px;
+    
 }
