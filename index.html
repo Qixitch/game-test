@@ -20,17 +20,17 @@
             <div id="gamemode_classic" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/original.png);">
                     <div class="thumbnailBanner">
-                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Original</strong></a><br>
-                        <span class="mapGamemode"><strong>Original collection and dodging</strong></span>
+                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Classic</strong></a><br>
+                        <span class="mapGamemode"><strong>Classic collection and dodging</strong></span>
                     </div>
                     <div class="thumbnailLabels">
-                        <span class="label label-success mapLabel">Featured</span>
+                        <span class="label label-warning mapLabel">Featured</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
                 <div class="thumbnailAuthors"><small>Best Score: <span id="original-best">0</span></small></div>
                 <div style="padding-top:2%;" class="center">
-                    <span><a href="games/classic.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
+                    <span><a href="games/original.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
                 </div>
             </div>
         </div>
@@ -39,36 +39,35 @@
             <div id="gamemode_classic" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/original-classic.png);">
                     <div class="thumbnailBanner">
-                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Classic</strong></a><br>
-                        <span class="mapGamemode"><strong>Classic collection and dodging (legacy version)</strong></span>
+                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Original</strong></a><br>
+                        <span class="mapGamemode"><strong>Original game code and settings - collection and dodging</strong></span>
                     </div>
                     <div class="thumbnailLabels">
-                        <span class="label label-primary mapLabel">Mobile Friendly</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
                 <div class="thumbnailAuthors"><small>Best Score: <span id="classic-best">0</span></small></div>
                 <div style="padding-top:2%;" class="center">
-                    <span><a href="games/classic-old.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
+                    <span><a href="games/classic.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
                 </div>
             </div>
         </div>
         <!-- Insane Mode -->
         <div class="col-xs-4">
             <div id="gamemode_classic" class="thumbnail thumbnailFloat">
-                <div class="thumbnailImage" style="background-image: url();">
+                <div class="thumbnailImage" style="background-image: url(assets/img/insane.png);">
                     <div class="thumbnailBanner">
                         <a class="thumbnailHeader" href="#rooted_fort"><strong>Insane Mode</strong></a><br>
                         <span class="mapGamemode"><strong>Classic collection and dodging, insanely fast..</strong></span>
                     </div>
                     <div class="thumbnailLabels">
-                        <span class="label label-danger mapLabel">Coming Soon</span>
+                        <span class="label label-info mapLabel">New</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
                 <div class="thumbnailAuthors"><small>Best Score: <span id="insane-best">0</span></small></div>
                 <div style="padding-top:2%;" class="center">
-                    <span class="btn btn-info-disabled thumbnailButton disable-text">Play Game</span>
+                    <span><a href="games/insane.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
                 </div>
             </div>
         </div>
@@ -77,15 +76,15 @@
             <div id="gamemode_classic" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url();">
                     <div class="thumbnailBanner">
-                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Coming Soon</strong></a><br>
-                        <span class="mapGamemode"><strong></strong></span>
+                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Deflation Mode</strong></a><br>
+                        <span class="mapGamemode"><strong>Keep Nathan's pleasure above 0 as long as you can</strong></span>
                     </div>
                     <div class="thumbnailLabels">
                         <span class="label label-danger mapLabel">Coming Soon</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
-                <div class="thumbnailAuthors"><small>Best Score: <span>0</span></small></div>
+                <div class="thumbnailAuthors"><small>Best Score: <span id="deflate-best">0</span></small></div>
                 <div style="padding-top:2%;" class="center">
                     <span class="btn btn-info-disabled thumbnailButton disable-text">Play Game</span>
                 </div>
@@ -96,6 +95,8 @@
             function loadScores() {
                 document.getElementById("original-best").innerHTML = cacheJS.get({id: "valueScoreHigh-1"});
                 document.getElementById("classic-best").innerHTML = cacheJS.get({id: "valueScoreHigh"});
+                document.getElementById("insane-best").innerHTML = cacheJS.get({id: "valueScoreHigh-insane"});
+                document.getElementById("deflate-best").innerHTML = cacheJS.get({id: "valueScoreHigh-deflate"});
             }
         </script>
     </body>
