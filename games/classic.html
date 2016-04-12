@@ -17,13 +17,13 @@
         </script>
         <script>
             function startGame() {
-                myGamePiece = new component(42, 55, "player.png", 10, 120, "image");
-                myScore = new component("24px", "Josefin Sans", "black", 12, 28, "text");
-                myStatGame = new component("12px", "Josefin Sans", "black", 5, 334, "text");
-                myStatPlayer = new component("12px", "Josefin Sans", "black", 5, 348, "text");
-                myStatCollection = new component("12px", "Josefin Sans", "black", 5, 362, "text");
-                myStatObject = new component("12px", "Josefin Sans", "black", 5, 376, "text");
-                myStatVersion = new component("12px", "Josefin Sans", "black", 860, 376, "text");
+                myGamePiece = new component(30, 40, "player.png", 10, 120, "image");
+                myScore = new component("18px", "Josefin Sans", "black", 12, 22, "text");
+                myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
+                myStatPlayer = new component("9px", "Josefin Sans", "black", 5, 246, "text");
+                myStatCollection = new component("9px", "Josefin Sans", "black", 5, 255, "text");
+                myStatObject = new component("9px", "Josefin Sans", "black", 5, 265, "text");
+                myStatVersion = new component("9px", "Josefin Sans", "black", 420, 265, "text");
                 myGameArea.start();
                 loadScores();
             }
@@ -41,8 +41,8 @@
             var myGameArea = {
                 canvas : document.createElement("canvas"),
                 start : function() {
-                    this.canvas.width = 930;
-                    this.canvas.height = 380;
+                    this.canvas.width = 480;
+                    this.canvas.height = 270;
                     this.context = this.canvas.getContext("2d");
                     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
                     this.frameNo = 0; 
@@ -206,9 +206,9 @@
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
                     if (objSpeed < 8) {
-                        myObstacles.push(new component(54, 31, "salt.png", x, Math.floor(Math.random() * 349) + 1, "image"));
+                        myObstacles.push(new component(34, 20, "salt.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                     } else {
-                        myObstacles.push(new component(54, 31, "salt-red.png", x, Math.floor(Math.random() * 349) + 1, "image"));
+                        myObstacles.push(new component(34, 20, "salt-red.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                     }
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
@@ -218,7 +218,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(42, 42, "whip.png", x, Math.floor(Math.random() * 338) + 1, "image"));
+                    myCollection.push(new component(30, 30, "whip.png", x, Math.floor(Math.random() * 240) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     myCollection[i].x += -collectionSpeed;
@@ -314,7 +314,7 @@
                 }
             }
         </script>
-        <br><br>
+        <br>
         <div class="mainBox">
             <div class="center">
                 <span class="btn btn-info control-button" style="padding-left: 24px; padding-right: 24px;" onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">UP</span><br><br><br>
