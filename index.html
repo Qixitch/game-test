@@ -1,15 +1,20 @@
 <html>
     <head>
-        <title>Typical Night at Nathan's</title>
+        <title>A Typical Night at Nathan's</title>
+        
         <script src="assets/cacheJS.js"></script>
-        <link rel="stylesheet" href="assets/main.css">
-        <link rel="stylesheet" href="assets/bootstrap.css">
+        <link rel="stylesheet" href="assets/bootstrap.css" />
+        <link rel="stylesheet" href="assets/main.css" />
         <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
     </head>
     <body onload="loadScores()">
-        <div>
-        <h3>&nbsp;&nbsp;&nbsp;A TYPICAL NIGHT AT NATHAN'S HOUSE - THE GAME</h3>
-        <h4>&nbsp;&nbsp;&nbsp;Gamemode Selection</h4>
+        <div class="container-non-responsive">
+        <div class="center">
+            <span class="strikeThru">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="header">A Typical Night at Nathan's: The Game</span>
+            <span class="strikeThru">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+        <h3>&nbsp;&nbsp;&nbsp;Gamemode Selection</h3>
         <!-- Original -->
         <div class="col-xs-4">
             <div id="gamemode_classic" class="thumbnail thumbnailFloat">
@@ -86,12 +91,12 @@
                 </div>
             </div>
         </div>
+        </div>
         <script>
             function loadScores() {
                 document.getElementById("original-best").innerHTML = cacheJS.get({id: "valueScoreHigh-1"});
                 document.getElementById("classic-best").innerHTML = cacheJS.get({id: "valueScoreHigh"});
             }
         </script>
-        </div>
     </body>
 </html>
