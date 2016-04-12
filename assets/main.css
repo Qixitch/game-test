@@ -28,7 +28,8 @@ canvas {
 .mainBox {
     border: 2px solid #222222;
     background-color: #525252;
-    max-width: 484px;
+    text-align: center;
+    width: 480px;
     padding-top: 12px;
     padding-bottom: 12px;
 }
