@@ -205,11 +205,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    if (objSpeed < 8) {
-                        myObstacles.push(new component(34, 20, "salt.png", x, Math.floor(Math.random() * 250) + 1, "image"));
-                    } else {
-                        myObstacles.push(new component(34, 20, "salt-red.png", x, Math.floor(Math.random() * 250) + 1, "image"));
-                    }
+                    myObstacles.push(new component(34, 20, "salt.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
                     myObstacles[i].x += -objSpeed;
