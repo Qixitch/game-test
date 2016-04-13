@@ -35,10 +35,12 @@
             var myStats;
             var myCollectionScore = 0;
             var saltTouched = 0;
-            var gameVersion = "0.2.0";
+            var gameVersion = "0.2.1";
             
             var realScore;
             var totalScore = 0;
+            
+            var playerSlowTime = 0;
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -174,9 +176,15 @@
                 var playerSpeed;
                 var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
                 var collectionSpeed = 2;
-                playerSpeed = 1.7 + (myCollectionScore/35);
                 if (playerSpeed > 2.4) {
                     playerSpeed = 2.4;
+                }
+                if (playerSlowTime > 0) {
+                    playerSlowTime -= 1;
+                    playerSpeed = 0.8;
+                } else {
+                    playerSlowTime = 0;
+                    playerSpeed = 1.7 + (myCollectionScore/35);
                 }
                 objRate = (intRate - (myCollectionScore/2)) - Math.round((myGameArea.frameNo/60));
                 if (objRate < 10) {
@@ -189,6 +197,7 @@
                         reduceCollectionScore();
                         myObstacles[i].y += -9000;
                         myObstacles[i].update();
+                        playerSlowTime = 120;
                         return;
                     } 
                 }
@@ -206,7 +215,7 @@
                 function reduceCollectionScore() {
                     saltTouched += 1;
                 }
-                if (realScore < 0) {
+                if (realScore <= 0) {
                     updateScores();
                     myGameArea.stop();
                     return;
@@ -217,9 +226,9 @@
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
                     if (objSpeed < 8) {
-                        myObstacles.push(new component(45, 27, "salt.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                        myObstacles.push(new component(45, 27, "salt-blue.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                     } else {
-                        myObstacles.push(new component(58, 34, "salt-red.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                        myObstacles.push(new component(58, 34, "salt-blue.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                     }
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
@@ -235,14 +244,18 @@
                     myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                realScore = (36 + (myCollectionScore * 5)) - (Math.round(myGameArea.frameNo/60) + (saltTouched * 21));
+                realScore = (36 + (myCollectionScore * 8)) - (Math.round(myGameArea.frameNo/60) + (saltTouched * 18));
                 myScore.text = "Pleasure: " + realScore;
                 myScore.update();
                 var enableStat = document.getElementById("show-stats").checked;
                 if (enableStat) {
                     myStatGame.text = "Time elapsed = " + totalScore + " seconds";
                     myStatGame.update();
-                    myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
+                    if (playerSlowTime < 1) {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
+                    } else {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed + ", slow duration = " + playerSlowTime;
+                    }
                     myStatPlayer.update();
                     myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals, movement speed = " + collectionSpeed;
                     myStatCollection.update();
@@ -331,7 +344,7 @@
                 <span class="btn btn-info control-button" onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
                 <div style="font-size:12px;color: #fff">
                     <strong style="font-size: 18px;">A Typical Night at Nathan's: Deflation Mode</strong><br>
-                    Collect WHIPS to keep Nathan's pleasure above 0! Salt reduces pleasure<br>
+                    Collect WHIPS to keep Nathan's pleasure above 0! Salt reduces pleasure and movement speed!<br>
                     Use the ARROW KEYS, WASD or the controls above to move Nathan<br><br>
                 </div>
                 <div class="well center" style="max-width:360px;">
