@@ -38,6 +38,7 @@ canvas {
     float: left;
     display: inline-block;
     width: 300px;
+    height: 312px;
 }
 
 .thumbnailImage {
@@ -142,8 +143,8 @@ canvas {
 }
 
 .label-desc {
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 5.5px;
+    margin-bottom: 6px;
 }
 
 .topMargin {
@@ -157,4 +158,19 @@ canvas {
 }
 
 .description {
+    font-size: 12px;
+}
+
+.black-font {
+    color: #000000;
+}
+
+.thumbnail-hidden {
+  display: block;
+  padding: 4px;
+  margin-bottom: 20px;
+  line-height: 1.42857143;
+  -webkit-transition: border .2s ease-in-out;
+       -o-transition: border .2s ease-in-out;
+          transition: border .2s ease-in-out;
 }

@@ -14,13 +14,13 @@
             <span class="header">A Typical Night at Nathan's: The Game</span>
             <span class="strikeThru">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </div>
-        <h3>&nbsp;&nbsp;&nbsp;Gamemode Selection</h3>
+        <h3>&nbsp;&nbsp;&nbsp;Gamemode Selection and Information</h3>
         <!-- Original -->
         <div class="col-xs-4">
             <div id="gamemode_classic" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/original.png);">
                     <div class="thumbnailBanner">
-                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Classic</strong></a><br>
+                        <span class="thumbnailHeader"><strong>Classic</strong></span><br>
                         <span class="mapGamemode"><strong>Classic collection and dodging</strong></span>
                     </div>
                     <div class="thumbnailLabels">
@@ -36,10 +36,10 @@
         </div>
         <!-- Original Classic -->
         <div class="col-xs-4">
-            <div id="gamemode_classic" class="thumbnail thumbnailFloat">
+            <div id="gamemode_original" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/original-classic.png);">
                     <div class="thumbnailBanner">
-                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Original</strong></a><br>
+                        <span class="thumbnailHeader"><strong>Original</strong></span><br>
                         <span class="mapGamemode"><strong>Original game code and settings - collection and dodging</strong></span>
                     </div>
                     <div class="thumbnailLabels">
@@ -54,10 +54,10 @@
         </div>
         <!-- Insane Mode -->
         <div class="col-xs-4">
-            <div id="gamemode_classic" class="thumbnail thumbnailFloat">
+            <div id="gamemode_insane" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/insane.png);">
                     <div class="thumbnailBanner">
-                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Insane Mode</strong></a><br>
+                        <span class="thumbnailHeader"><strong>Insane Mode</strong></span><br>
                         <span class="mapGamemode"><strong>Classic collection and dodging, insanely fast..</strong></span>
                     </div>
                     <div class="thumbnailLabels">
@@ -73,10 +73,10 @@
         </div>
         <!-- Deflation Mode -->
         <div class="col-xs-4">
-            <div id="gamemode_classic" class="thumbnail thumbnailFloat">
+            <div id="gamemode_deflate" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/deflate.png);">
                     <div class="thumbnailBanner">
-                        <a class="thumbnailHeader" href="#rooted_fort"><strong>Deflation Mode</strong></a><br>
+                        <span class="thumbnailHeader"><strong>Deflation Mode</strong></span><br>
                         <span class="mapGamemode"><strong>Keep Nathan's pleasure above 0 as long as you can</strong></span>
                     </div>
                     <div class="thumbnailLabels">
@@ -90,13 +90,51 @@
                 </div>
             </div>
         </div>
+        <!-- Coming Soon -->
+        <div class="col-xs-4">
+            <div id="gamemode_soon" class="thumbnail thumbnailFloat">
+                <div class="thumbnailImage" style="background-image: url();">
+                    <div class="thumbnailBanner">
+                        <span class="thumbnailHeader"><strong>Coming Soon</strong></span><br>
+                        <span class="mapGamemode"><strong>???</strong></span>
+                    </div>
+                    <div class="thumbnailLabels">
+                        <span class="label label-danger mapLabel">Coming Soon</span>
+                        <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </div>
+                </div>
+                <div class="thumbnailAuthors"><small>Best Score: <span>0</span></small></div>
+                <div style="padding-top:2%;" class="center">
+                    <span class="btn btn-info-disabled thumbnailButton" role="button">Play Game</span>
+                </div>
+            </div>
+        </div>
+        <!-- Coming Soon -->
+        <div class="col-xs-4">
+            <div id="gamemode_soon" class="thumbnail thumbnailFloat">
+                <div class="thumbnailImage" style="background-image: url();">
+                    <div class="thumbnailBanner">
+                        <span class="thumbnailHeader"><strong>Coming Soon</strong></span><br>
+                        <span class="mapGamemode"><strong>???</strong></span>
+                    </div>
+                    <div class="thumbnailLabels">
+                        <span class="label label-danger mapLabel">Coming Soon</span>
+                        <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </div>
+                </div>
+                <div class="thumbnailAuthors"><small>Best Score: <span>0</span></small></div>
+                <div style="padding-top:2%;" class="center">
+                    <span class="btn btn-info-disabled thumbnailButton" role="button">Play Game</span>
+                </div>
+            </div>
+        </div>
         <!-- Salt Meanings -->
         <div class="col-xs-4">
             <div class="thumbnail thumbnailFloat topMargin">
-                <div class="label-default label-desc">
+                <div class="label-desc black-font">
                     <img class="saltImage" src="games/salt.png">
                     <span class="infoHeader">Salt</span><br>
-                    <span class="description">Common salt.. gradual increase in movement speed and spawn rate</span>
+                    <span class="description">Common salt.. gradual increase in movement speed and spawn rate.</span>
                 </div>
                 <div class="label-danger label-desc">
                     <img class="saltImage" src="games/salt-red.png">
@@ -106,8 +144,36 @@
                 <div class="label-info label-desc">
                     <img class="saltImage" src="games/salt-blue.png">
                     <span class="infoHeader">Blue Salt</span><br>
-                    <span class="description">Reduces pleasure by 18 and slows the player. Only found in Deflation Mode</span>
+                    <span class="description">Reduces pleasure by 18 and slows the player. Only found in Deflation Mode.</span>
                 </div>
+                <div class="label-default label-desc">
+                    <img class="saltImage" src="games/salt-grey.png">
+                    <span class="infoHeader">Dark Grey Salt</span><br>
+                    <span class="description">Very slow and follows player movement. This salt cannot currently be found in any gamemode.</span>
+                </div>
+            </div>
+        </div>
+        <!-- Recent Changes -->
+        <div class="col-xs-4">
+            <div class="thumbnail thumbnailFloat topMargin black-font">
+                <span class="infoHeader">Recent Changes</span><hr>
+                14-04-16:
+                <ul>
+                    <li>Remove size changes in blue salt</li>
+                    <li>Reduce collection score penalty for salt spawn rate</li>
+                </ul>
+                13-04-16:
+                <ul>
+                    <li>Added <i>Deflation Mode</i></li>
+                </ul>
+                12-04-16:
+                <ul>
+                    <li>Added <i>Insane Mode</i></li>
+                </ul>
+                11-04-16:
+                <ul>
+                    <li>Resize all game ports to fit mobile screens</li>
+                </ul>
             </div>
         </div>
         </div>
