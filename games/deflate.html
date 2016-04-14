@@ -35,7 +35,7 @@
             var myStats;
             var myCollectionScore = 0;
             var saltTouched = 0;
-            var gameVersion = "0.2.1";
+            var gameVersion = "0.2.2";
             
             var realScore;
             var totalScore = 0;
@@ -186,7 +186,7 @@
                     playerSlowTime = 0;
                     playerSpeed = 1.7 + (myCollectionScore/35);
                 }
-                objRate = (intRate - (myCollectionScore/2)) - Math.round((myGameArea.frameNo/60));
+                objRate = (intRate - (myCollectionScore/4)) - Math.round((myGameArea.frameNo/60));
                 if (objRate < 10) {
                     objRate = 10;
                 }
@@ -225,11 +225,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    if (objSpeed < 8) {
-                        myObstacles.push(new component(45, 27, "salt-blue.png", x, Math.floor(Math.random() * 250) + 1, "image"));
-                    } else {
-                        myObstacles.push(new component(58, 34, "salt-blue.png", x, Math.floor(Math.random() * 250) + 1, "image"));
-                    }
+                    myObstacles.push(new component(45, 27, "salt-blue.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
                     myObstacles[i].x += -objSpeed;
