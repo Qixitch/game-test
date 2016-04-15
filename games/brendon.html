@@ -1,0 +1,363 @@
+<html>
+    <head>
+        <title>Very Special Night at Brendons's</title>
+        <meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <style>
+        </style>
+        <script src="../assets/cacheJS.js"></script>
+        <link rel="stylesheet" href="../assets/main.css">
+        <link rel="stylesheet" href="../assets/bootstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+    </head>
+    <body class="mainElement" onload="startGame()">
+        <script>
+            function reloadPage() {
+        location.reload();
+            }
+        </script>
+        <script>
+            function startGame() {
+                myGamePiece = new component(30, 40, "player-2.png", 10, 120, "image");
+                staticBoss = new component(163, 261, "player-3.png", 390, 38, "image");
+                
+                myScore = new component("18px", "Josefin Sans", "black", 12, 22, "text");
+                myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
+                myStatPlayer = new component("9px", "Josefin Sans", "black", 5, 246, "text");
+                myStatCollection = new component("9px", "Josefin Sans", "black", 5, 255, "text");
+                myStatObject = new component("9px", "Josefin Sans", "black", 5, 265, "text");
+                myStatVersion = new component("9px", "Josefin Sans", "white", 420, 265, "text");
+                myGameArea.start();
+                loadScores();
+            }
+            
+            var myGamePiece;
+            var staticBoss;
+            var myObstacles = [];
+            var myCollection = [];
+            var myScore;
+            var myStats;
+            var myCollectionScore = 0;
+            var saltTouched = 0;
+            var gameVersion = "0.0.1";
+            
+            var realScore;
+            var totalScore = 0;
+            
+            var playerSlowTime = 0;
+            var objPitch = 1;
+            var changePitch = 0;
+            
+            var myGameArea = {
+                canvas : document.createElement("canvas"),
+                start : function() {
+                    this.canvas.width = 480;
+                    this.canvas.height = 270;
+                    this.context = this.canvas.getContext("2d");
+                    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                    this.frameNo = 0; 
+                    this.interval = setInterval(updateGameArea, 20);
+                    window.addEventListener('keydown', function (e) {
+                        myGameArea.keys = (myGameArea.keys || []);
+                        myGameArea.keys[e.keyCode] = true;
+                    })
+                    window.addEventListener('keyup', function (e) {
+                        myGameArea.keys[e.keyCode] = false; 
+                    })
+                    window.addEventListener('keydown', function (e) {
+                        myGameArea.key = (myGameArea.key || []);
+                        myGameArea.key[e.keyCode] = true;
+                    })
+                },
+                clear : function() {
+                    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                },
+                stop : function() {
+                    clearInterval(this.interval);
+                }
+            }
+            
+            function everyinterval(n) {
+                if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+                return false;
+            }
+            
+            function component(width, height, color, x, y, type) {
+                this.type = type;
+                if (type == "image") {
+                    this.image = new Image();
+                    this.image.src = color;
+                }
+                this.width = width;
+                this.height = height;
+                this.speedX = 0;
+                this.speedY = 0;
+                this.x = x;
+                this.y = y;
+                this.update = function() {
+                    ctx = myGameArea.context;
+                    if (this.type == "text") {
+                        ctx.font = this.width + " " + this.height;
+                        ctx.fillStyle = color;
+                        ctx.fillText(this.text, this.x, this.y);
+                    } else {
+                        if (type == "image") {
+                            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+                        } else {
+                            ctx.fillStyle = color;
+                            ctx.fillRect(this.x, this.y, this.width, this.height);
+                        }
+                    }
+                }
+                this.newPos = function() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.hitTop();
+                    this.hitBottom();
+                    this.hitLeft();
+                    this.hitRight();
+                }
+                this.hitTop = function() {
+                    var areatop = 0;
+                    if (this.y < areatop) {
+                        this.y = areatop;
+                    }
+                }
+                this.hitBottom = function() {
+                    var areabottom = myGameArea.canvas.height - this.height;
+                    if (this.y > areabottom) {
+                        this.y = areabottom;
+                    }
+                }
+                this.hitLeft = function() {
+                    var arealeft = 0;
+                    if (this.x < arealeft) {
+                        this.x = arealeft;
+                    }
+                }
+                this.hitRight = function() {
+                    var arearight = myGameArea.canvas.width - this.width;
+                    if (this.x > arearight) {
+                        this.x = arearight;
+                    }
+                }
+                this.crashWith = function(otherobj) {
+                    var myleft = this.x;
+                    var myright = this.x + (this.width);
+                    var mytop = this.y;
+                    var mybottom = this.y + (this.height);
+                    var otherleft = otherobj.x;
+                    var otherright = otherobj.x + (otherobj.width);
+                    var othertop = otherobj.y;
+                    var otherbottom = otherobj.y + (otherobj.height);
+                    var crash = true;
+                    if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                        crash = false;
+                    }
+                    return crash;
+                }
+                this.crashWithScore = function(otherobjA) {
+                    var myleftA = this.x;
+                    var myrightA = this.x + (this.width);
+                    var mytopA = this.y;
+                    var mybottomA = this.y + (this.height);
+                    var otherleftA = otherobjA.x;
+                    var otherrightA = otherobjA.x + (otherobjA.width);
+                    var othertopA = otherobjA.y;
+                    var otherbottomA = otherobjA.y + (otherobjA.height);
+                    var crashScore = true;
+                    if ((mybottomA < othertopA) || (mytopA > otherbottomA) || (myrightA < otherleftA) || (myleftA > otherrightA)) {
+                        crashScore = false;
+                    }
+                    return crashScore;
+                }
+            }
+            
+            function updateGameArea() {
+                var x, y;
+                var intRate = 48;
+                var intSpeed = 1;
+                var objRate;
+                var objSpeed;
+                var playerSpeed;
+                var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
+                var collectionSpeed = 2;
+                if (playerSpeed > 2.4) {
+                    playerSpeed = 2.4;
+                }
+                if (playerSlowTime > 0) {
+                    playerSlowTime -= 1;
+                    playerSpeed = 0.8;
+                } else {
+                    playerSlowTime = 0;
+                    playerSpeed = 1.7 + (myCollectionScore/35);
+                }
+                objRate = intRate - Math.round((myGameArea.frameNo/60));
+                if (objRate < 10) {
+                    objRate = 10;
+                }
+                objSpeed = intSpeed + (myGameArea.frameNo/475);
+                totalScore = Math.round(myGameArea.frameNo/60);
+                for (i = 0; i < myObstacles.length; i += 1) {
+                    if (myGamePiece.crashWith(myObstacles[i])) {
+                        reduceCollectionScore();
+                        myObstacles[i].y += -9000;
+                        myObstacles[i].update();
+                        playerSlowTime = 120;
+                        return;
+                    } 
+                }
+                for (i = 0; i < myCollection.length; i += 1) {
+                    if (myGamePiece.crashWithScore(myCollection[i])) {
+                        updateCollectionScore();
+                        myCollection[i].y += -9000;
+                        myCollection[i].update();
+                        return;
+                    }
+                }
+                function updateCollectionScore() {
+                    myCollectionScore += 1;
+                }
+                function reduceCollectionScore() {
+                    saltTouched += 1;
+                }
+                if (realScore <= 0) {
+                    updateScores();
+                    myGameArea.stop();
+                    return;
+                }
+                myGameArea.clear();
+                myGameArea.frameNo += 1;
+                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myObstacles.push(new component(20, 32, "projectile.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                }
+                for (i = 0; i < myObstacles.length; i += 1) {
+                    if (myGameArea.keys && myGameArea.keys[37] || myGameArea.keys && myGameArea.keys[65] || checkMoveleft) {
+                        myObstacles[i].x += -objSpeed * 1.25;
+                    } else {
+                        myObstacles[i].x += -objSpeed;
+                    }
+                    myObstacles[i].y += myGamePiece.speedY / 3;
+                    myObstacles[i].update();
+                }
+                staticBoss.update();
+                realScore = (36 + (myCollectionScore * 8));
+                myScore.text = "Pleasure: " + realScore;
+                myScore.update();
+                var enableStat = document.getElementById("show-stats").checked;
+                if (enableStat) {
+                    myStatGame.text = "Time elapsed = " + totalScore + " seconds";
+                    myStatGame.update();
+                    if (playerSlowTime < 1) {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
+                    } else {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed + ", slow duration = " + playerSlowTime;
+                    }
+                    myStatPlayer.update();
+                    myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals, movement speed = " + collectionSpeed;
+                    myStatCollection.update();
+                    myStatObject.text = "Obstacles Stats: spawn delay = " + objRate + " intervals, movement speed = " + objSpeed + ", pitch = " + objPitch;
+                    myStatObject.update();
+                }
+                myStatVersion.text = "version " + gameVersion;
+                myStatVersion.update();
+                myGamePiece.speedX = 0;
+                myGamePiece.speedY = 0;
+                if (myGameArea.keys && myGameArea.keys[37] && playerSlowTime <= 0 || myGameArea.keys && myGameArea.keys[65] && playerSlowTime <= 0 || checkMoveleft && playerSlowTime <= 0) {myGamePiece.speedX = -playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[39] && playerSlowTime <= 0 || myGameArea.keys && myGameArea.keys[68] && playerSlowTime <= 0 || checkMoveright && playerSlowTime <= 0) {myGamePiece.speedX = playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[38] && playerSlowTime <= 0 || myGameArea.keys && myGameArea.keys[87] && playerSlowTime <= 0 || checkMoveup && playerSlowTime <= 0) {myGamePiece.speedY = -playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[40] && playerSlowTime <= 0 || myGameArea.keys && myGameArea.keys[83] && playerSlowTime <= 0 || checkMovedown && playerSlowTime <= 0) {myGamePiece.speedY = playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[37] && playerSlowTime > 0 || myGameArea.keys && myGameArea.keys[65] && playerSlowTime > 0 || checkMoveleft && playerSlowTime > 0) {myGamePiece.speedX = playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[39] && playerSlowTime > 0 || myGameArea.keys && myGameArea.keys[68] && playerSlowTime > 0 || checkMoveright && playerSlowTime > 0) {myGamePiece.speedY = -playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[38] && playerSlowTime > 0 || myGameArea.keys && myGameArea.keys[87] && playerSlowTime > 0 || checkMoveup && playerSlowTime > 0) {myGamePiece.speedY = playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[40] && playerSlowTime > 0 || myGameArea.keys && myGameArea.keys[83] && playerSlowTime > 0 || checkMovedown && playerSlowTime > 0) {myGamePiece.speedX = -playerSpeed; }
+                myGamePiece.newPos();
+                myGamePiece.update();
+                console.log(objPitch);
+            }
+            var checkMoveup = false;
+            var checkMovedown = false;
+            var checkMoveleft = false;
+            var checkMoveright = false;
+            function moveup() {
+                checkMoveup = true;
+                checkMovedown = false;
+                checkMoveleft = false;
+                checkMoveright = false;
+            }
+            function movedown() {
+                checkMovedown = true;
+                checkMoveup = false;
+                checkMoveleft = false;
+                checkMoveright = false;
+            }
+            
+            function moveleft() {
+                checkMoveleft = true;
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveright = false;
+            }
+
+            function moveright() {
+                checkMoveright = true;
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveleft = false;
+            }
+            
+            function stopMove() {
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveleft = false;
+                checkMoveright = false;
+                myGamePiece.speedX = 0;
+                myGamePiece.speedY = 0; 
+            }
+            
+            function updateScores() {
+                cacheJS.set({id: "valueScoreRecent-brendon"}, totalScore);
+                if (cacheJS.get({id: "valueScoreHigh-brendon"}) == null) {
+                    cacheJS.set({id: "valueScoreHigh-brendon"}, totalScore);
+                } else if (totalScore > cacheJS.get({id: "valueScoreHigh-brendon"})) {
+                    cacheJS.set({id: "valueScoreHigh-brendon"}, totalScore);
+                }
+                loadScores();
+            }
+            
+            function resetScores() {
+                cacheJS.set({id: "valueScoreHigh-brendon"}, 0);
+                cacheJS.set({id: "valueScoreRecent-brendon"}, 0);
+                loadScores();
+            }
+            
+            function loadScores() {
+                document.getElementById("recent-score-1").innerHTML = cacheJS.get({id: "valueScoreRecent-brendon"});
+                document.getElementById("high-score-1").innerHTML = cacheJS.get({id: "valueScoreHigh-brendon"});
+            }
+        </script>
+        <br>
+        <div class="mainBox">
+            <div class="center">
+                <span class="btn btn-info control-button" style="padding-left: 24px; padding-right: 24px;" onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">UP</span><br><br><br>
+                <span class="btn btn-info control-button" style="padding-left: 16px; padding-right: 16px;" onmouseover="moveleft()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">LEFT</span>
+                <span class="btn btn-info control-button" style="padding-left: 15px; padding-right: 15px;" onmouseover="stopMove()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">IDLE</span>
+                <span class="btn btn-info control-button" onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
+                <span class="btn btn-info control-button" onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
+                <div style="font-size:12px;color: #fff">
+                    <strong style="font-size: 18px;">A <i>Very</i> Special Night at Brendon's</strong><br>
+                    Survive Rebecca for as long as you can, dodging her projectiles!<br>
+                    Use the ARROW KEYS, WASD or the controls above to move Brendon<br><br>
+                </div>
+                <div class="well center" style="max-width:360px;">
+                    Best Time: <span id="high-score-1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Previous Time: <span id="recent-score-1">0</span>
+                </div>
+                <button class="btn btn-success" style="margin-right: 32px;" onclick="reloadPage()">Reload Game</button>
+                <button class="btn btn-danger" style="margin-right: 32px;" onclick="resetScores()">Reset Scores</button>
+                <span style="color: #fff">Show Game Stats</span> <input type="checkbox" id="show-stats" checked="checked" /><br>
+            </div>
+        </div>
+    </body>
+</html>
