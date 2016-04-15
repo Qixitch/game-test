@@ -33,11 +33,14 @@
             var myGamePiece;
             var staticBoss;
             var myObstacles = [];
+            var myProjectile = [];
             var myCollection = [];
             var myScore;
             var myStats;
             var myCollectionScore = 0;
+            var playerWidth = 30;
             var saltTouched = 0;
+            var saltTouched2 = 0;
             var gameVersion = "0.0.1";
             
             var realScore;
@@ -173,36 +176,53 @@
             }
             
             function updateGameArea() {
+                myGamePiece.width = 30 + (myCollectionScore * 2);
                 var x, y;
-                var intRate = 48;
+                var intRate = 80;
                 var intSpeed = 1;
+                var intProgRate = 48;
+                var progRate;
+                var progSpeed;
                 var objRate;
                 var objSpeed;
                 var playerSpeed;
                 var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
                 var collectionSpeed = 2;
-                if (playerSpeed > 2.4) {
-                    playerSpeed = 2.4;
+                if (playerSpeed < 1) {
+                    playerSpeed = 1;
                 }
                 if (playerSlowTime > 0) {
                     playerSlowTime -= 1;
                     playerSpeed = 0.8;
                 } else {
                     playerSlowTime = 0;
-                    playerSpeed = 1.7 + (myCollectionScore/35);
+                    playerSpeed = 2.1 - (myCollectionScore/10);
                 }
                 objRate = intRate - Math.round((myGameArea.frameNo/60));
-                if (objRate < 10) {
-                    objRate = 10;
+                if (objRate < 18) {
+                    objRate = 18;
+                }
+                progRate = intProgRate - Math.round((myGameArea.frameNo/60));
+                if (progRate < 10) {
+                    progjRate = 10;
                 }
                 objSpeed = intSpeed + (myGameArea.frameNo/475);
+                progSpeed = intSpeed + (myGameArea.frameNo/475) + 2;
                 totalScore = Math.round(myGameArea.frameNo/60);
                 for (i = 0; i < myObstacles.length; i += 1) {
                     if (myGamePiece.crashWith(myObstacles[i])) {
                         reduceCollectionScore();
                         myObstacles[i].y += -9000;
                         myObstacles[i].update();
-                        playerSlowTime = 120;
+                        return;
+                    } 
+                }
+                for (i = 0; i < myProjectile.length; i += 1) {
+                    if (myGamePiece.crashWith(myProjectile[i])) {
+                        reduceCollectionScore();
+                        myProjectile[i].y += -9000;
+                        myProjectile[i].update();
+                        playerSlowTime = 40;
                         return;
                     } 
                 }
@@ -227,22 +247,31 @@
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
-                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
+                if (myGameArea.frameNo == 1 || everyinterval(progRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myObstacles.push(new component(20, 32, "projectile.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                    myProjectile.push(new component(20, 32, "projectile.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
-                for (i = 0; i < myObstacles.length; i += 1) {
+                for (i = 0; i < myProjectile.length; i += 1) {
                     if (myGameArea.keys && myGameArea.keys[37] || myGameArea.keys && myGameArea.keys[65] || checkMoveleft) {
-                        myObstacles[i].x += -objSpeed * 1.25;
+                        myProjectile[i].x += (-progSpeed) * 1.25;
                     } else {
-                        myObstacles[i].x += -objSpeed;
+                        myProjectile[i].x += -progSpeed;
                     }
-                    myObstacles[i].y += myGamePiece.speedY / 3;
-                    myObstacles[i].update();
+                    myProjectile[i].y += myGamePiece.speedY / 3;
+                    myProjectile[i].update();
+                }
+                if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myCollection.push(new component(30, 18, "burger.png", x, Math.floor(Math.random() * 240) + 1, "image"));
+                }
+                for (i = 0; i < myCollection.length; i += 1) {
+                    myCollection[i].x += -collectionSpeed;
+                    myCollection[i].update();
                 }
                 staticBoss.update();
-                realScore = (36 + (myCollectionScore * 8));
+                realScore = (36 + (myCollectionScore * 8)) - (Math.round(myGameArea.frameNo/60) + (saltTouched * 18));
                 myScore.text = "Pleasure: " + realScore;
                 myScore.update();
                 var enableStat = document.getElementById("show-stats").checked;
@@ -257,7 +286,7 @@
                     myStatPlayer.update();
                     myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals, movement speed = " + collectionSpeed;
                     myStatCollection.update();
-                    myStatObject.text = "Obstacles Stats: spawn delay = " + objRate + " intervals, movement speed = " + objSpeed + ", pitch = " + objPitch;
+                    myStatObject.text = "Obstacles Stats: spawn delay = " + progRate + " intervals, movement speed = " + progSpeed;
                     myStatObject.update();
                 }
                 myStatVersion.text = "version " + gameVersion;
@@ -274,7 +303,6 @@
                 if (myGameArea.keys && myGameArea.keys[40] && playerSlowTime > 0 || myGameArea.keys && myGameArea.keys[83] && playerSlowTime > 0 || checkMovedown && playerSlowTime > 0) {myGamePiece.speedX = -playerSpeed; }
                 myGamePiece.newPos();
                 myGamePiece.update();
-                console.log(objPitch);
             }
             var checkMoveup = false;
             var checkMovedown = false;
