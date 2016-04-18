@@ -24,7 +24,6 @@
                         <span class="mapGamemode"><strong>Classic collection and dodging</strong></span>
                     </div>
                     <div class="thumbnailLabels">
-                        <span class="label label-warning mapLabel">Featured</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
@@ -98,6 +97,7 @@
                     </div>
                     <div class="thumbnailLabels">
                         <span class="label label-info mapLabel">New</span>
+                        <span class="label label-warning mapLabel">Featured</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
@@ -107,20 +107,20 @@
                 </div>
             </div>
         </div>
-        <!-- Super Insane Mode -->
+        <!-- Blitz -->
         <div class="col-xs-4">
             <div id="gamemode_soon" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url();">
                     <div class="thumbnailBanner">
-                        <span class="thumbnailHeader"><strong>Super Insane Mode</strong></span><br>
-                        <span class="mapGamemode"><strong>???</strong></span>
+                        <span class="thumbnailHeader"><strong>Blitz</strong></span><br>
+                        <span class="mapGamemode"><strong>Collect as many whips as you can before time runs out</strong></span>
                     </div>
                     <div class="thumbnailLabels">
-                        <span class="label label-danger mapLabel">Coming Soon</span>
+                        <span class="label label-info mapLabel">New</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
-                <div class="thumbnailAuthors"><small>Best Score: <span id="super-insane-best">0</span></small></div>
+                <div class="thumbnailAuthors"><small>Best Score: <span id="blitz-best">0</span></small></div>
                 <div style="padding-top:2%;" class="center">
                     <span class="btn btn-info-disabled thumbnailButton" role="button">Play Game</span>
                 </div>
@@ -182,6 +182,7 @@
                 if (cacheJS.get({id: "valueScoreHigh"}) == null) {cacheJS.set({id: "valueScoreHigh"}, 0);}
                 if (cacheJS.get({id: "valueScoreHigh-insane"}) == null) { cacheJS.set({id: "valueScoreHigh-insane"}, 0);}
                 if (cacheJS.get({id: "valueScoreHigh-deflate"}) == null) {cacheJS.set({id: "valueScoreHigh-deflate"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh-blitz"}) == null) {cacheJS.set({id: "valueScoreHigh-blitz"}, 0);}
                 if (cacheJS.get({id: "valueScoreHigh-brendon"}) == null) {cacheJS.set({id: "valueScoreHigh-brendon"}, 0);}
                 loadScores();
             }
@@ -191,6 +192,7 @@
                 document.getElementById("classic-best").innerHTML = cacheJS.get({id: "valueScoreHigh"});
                 document.getElementById("insane-best").innerHTML = cacheJS.get({id: "valueScoreHigh-insane"});
                 document.getElementById("deflate-best").innerHTML = cacheJS.get({id: "valueScoreHigh-deflate"});
+                document.getElementById("blitz-best").innerHTML = cacheJS.get({id: "valueScoreHigh-blitz"});
                 document.getElementById("brendon-best").innerHTML = cacheJS.get({id: "valueScoreHigh-brendon"});
             }
         </script>
