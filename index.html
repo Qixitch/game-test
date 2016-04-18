@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="assets/main.css" />
         <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
     </head>
-    <body onload="loadScores()">
+    <body onload="setupScores()">
         <div class="container-non-responsive">
         <div class="center">
             <span class="strikeThru">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -176,6 +176,16 @@
         </div>
         </div>
         <script>
+            // Set high scores to 0 if they are equal to null
+            function setupScores() {
+                if (cacheJS.get({id: "valueScoreHigh-1"}) == null) {cacheJS.set({id: "valueScoreHigh-1"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh"}) == null) {cacheJS.set({id: "valueScoreHigh"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh-insane"}) == null) { cacheJS.set({id: "valueScoreHigh-insane"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh-deflate"}) == null) {cacheJS.set({id: "valueScoreHigh-deflate"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh-brendon"}) == null) {cacheJS.set({id: "valueScoreHigh-brendon"}, 0);}
+                loadScores();
+            }
+            // Load high scores into HTML thumbnails
             function loadScores() {
                 document.getElementById("original-best").innerHTML = cacheJS.get({id: "valueScoreHigh-1"});
                 document.getElementById("classic-best").innerHTML = cacheJS.get({id: "valueScoreHigh"});
