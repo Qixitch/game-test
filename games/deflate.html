@@ -20,7 +20,7 @@
             function startGame() {
                 myGamePiece = new component(30, 40, "player.png", 10, 120, "image");
                 myScore = new component("18px", "Josefin Sans", "black", 12, 22, "text");
-                myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
+                myStatGame = new component("18px", "Josefin Sans", "black", 12, 40, "text");
                 myStatPlayer = new component("9px", "Josefin Sans", "black", 5, 246, "text");
                 myStatCollection = new component("9px", "Josefin Sans", "black", 5, 255, "text");
                 myStatObject = new component("9px", "Josefin Sans", "black", 5, 265, "text");
@@ -244,10 +244,10 @@
                 realScore = (36 + (myCollectionScore * 8)) - (Math.round(myGameArea.frameNo/60) + (saltTouched * 18));
                 myScore.text = "Pleasure: " + realScore;
                 myScore.update();
+                myStatGame.text = "Time elapsed: " + totalScore + "s";
+                myStatGame.update();
                 var enableStat = document.getElementById("show-stats").checked;
                 if (enableStat) {
-                    myStatGame.text = "Time elapsed = " + totalScore + " seconds";
-                    myStatGame.update();
                     if (playerSlowTime < 1) {
                         myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
                     } else {
