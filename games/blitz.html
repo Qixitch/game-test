@@ -254,7 +254,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myObstacles.push(new component(45, 27, "salt-grey.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                    myObstacles.push(new component(45, 27, "salts/salt-grey.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
                     myObstacles[i].x += -objSpeed;
@@ -264,7 +264,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myObstaclesL.push(new component(45, 27, "salt-grey-l.png", -60, Math.floor(Math.random() * 250) + 1, "image"));
+                    myObstaclesL.push(new component(45, 27, "salts/salt-grey-l.png", -60, Math.floor(Math.random() * 250) + 1, "image"));
                 }
                 for (i = 0; i < myObstaclesL.length; i += 1) {
                     myObstaclesL[i].x += objSpeed;
@@ -273,7 +273,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(30, 30, "whip.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
+                    myCollection.push(new component(30, 30, "salts/whip.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     myCollection[i].update();

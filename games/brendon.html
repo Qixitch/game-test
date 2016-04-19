@@ -18,8 +18,8 @@
         </script>
         <script>
             function startGame() {
-                myGamePiece = new component(30, 40, "player-2.png", 10, 120, "image");
-                staticBoss = new component(163, 261, "player-3.png", 390, 38, "image");
+                myGamePiece = new component(30, 40, "brendon/player-2.png", 10, 120, "image");
+                staticBoss = new component(163, 261, "brendon/player-3.png", 390, 38, "image");
                 
                 myScore = new component("18px", "Josefin Sans", "black", 12, 22, "text");
                 myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
@@ -251,7 +251,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(progRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myProjectile.push(new component(20, 32, "projectile.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                    myProjectile.push(new component(20, 32, "brendon/projectile.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
                 for (i = 0; i < myProjectile.length; i += 1) {
                     if (myGameArea.keys && myGameArea.keys[37] || myGameArea.keys && myGameArea.keys[65] || checkMoveleft) {
@@ -265,7 +265,7 @@
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(30, 18, "burger.png", x, Math.floor(Math.random() * 240) + 1, "image"));
+                    myCollection.push(new component(30, 18, "brendon/burger.png", x, Math.floor(Math.random() * 240) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     myCollection[i].x += -collectionSpeed;
