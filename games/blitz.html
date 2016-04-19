@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Typical Night at Nathan's</title>
+        <link rel="icon" type="image/png" href="player.png" />
         <meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <style>
         </style>
@@ -17,7 +18,7 @@
         </script>
         <script>
             function startGame() {
-                myGamePiece = new component(30, 40, "player.png", 10, 120, "image");
+                myGamePiece = new component(30, 40, "player.png", 220, 115, "image");
                 myScore = new component("18px", "Josefin Sans", "black", 12, 22, "text");
                 myTimer = new component("18px", "Josefin Sans", "black", 12, 40, "text");
                 myLives = new component("18px", "Josefin Sans", "black", 330, 22, "text");
@@ -32,6 +33,7 @@
             
             var myGamePiece;
             var myObstacles = [];
+            var myObstaclesL = [];
             var myCollection = [];
             var myScore;
             var myStats;
@@ -42,10 +44,11 @@
             var realScore;
             var totalScore = 0;
             
-            var timeRemaining = 60;
+            var timeRemaining = 120;
             var livesRemaining = 3;
             
             var playerSlowTime = 0;
+            var objectSlowTime = 0;
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -174,7 +177,7 @@
             
             function updateGameArea() {
                 var x, y;
-                var intRate = 65;
+                var intRate = 120;
                 var intSpeed = 1;
                 var objRate;
                 var objSpeed;
@@ -191,21 +194,43 @@
                     playerSlowTime = 0;
                     playerSpeed = 1.7 + (myCollectionScore/35);
                 }
-                objRate = (intRate - (myCollectionScore/4)) - Math.round((myGameArea.frameNo/60));
-                if (objRate < 10) {
-                    objRate = 10;
+                if (objectSlowTime > 0) {
+                    objectSlowTime -= 1;
+                    objSpeed = intSpeed;
+                } else {
+                    objectSlowTime = 0;
+                    objSpeed = intSpeed + (myGameArea.frameNo/950);
                 }
-                objSpeed = intSpeed + (myGameArea.frameNo/475);
+                objRate = intRate - Math.round(myGameArea.frameNo/60);
+                if (objRate < 26) {
+                    objRate = 26;
+                }
                 totalScore = Math.round(myGameArea.frameNo/60);
                 for (i = 0; i < myObstacles.length; i += 1) {
                     if (myGamePiece.crashWith(myObstacles[i])) {
                         reduceLives();
-                        myObstacles[i].y += -9000;
-                        myObstacles[i].update();
-                        myGamePiece.x = 10;
-                        myGamePiece.y = 120;
+                        myObstacles = [];
+                        myObstaclesL = [];
+                        //myCollection = [];
+                        myGamePiece.x = 220;
+                        myGamePiece.y = 115;
                         myGamePiece.update();
-                        playerSlowTime = 120;
+                        playerSlowTime = 60;
+                        objectSlowTime = 120;
+                        return;
+                    } 
+                }
+                for (i = 0; i < myObstaclesL.length; i += 1) {
+                    if (myGamePiece.crashWith(myObstaclesL[i])) {
+                        reduceLives();
+                        myObstacles = [];
+                        myObstaclesL = [];
+                        //myCollection = [];
+                        myGamePiece.x = 220;
+                        myGamePiece.y = 115;
+                        myGamePiece.update();
+                        playerSlowTime = 60;
+                        objectSlowTime = 120;
                         return;
                     } 
                 }
@@ -225,25 +250,35 @@
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
+                // Right Coming Objects
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myObstacles.push(new component(45, 27, "salt-blue.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                    myObstacles.push(new component(45, 27, "salt-grey.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
                 for (i = 0; i < myObstacles.length; i += 1) {
                     myObstacles[i].x += -objSpeed;
                     myObstacles[i].update();
                 }
+                // Left Coming Objects
+                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myObstaclesL.push(new component(45, 27, "salt-grey-l.png", -60, Math.floor(Math.random() * 250) + 1, "image"));
+                }
+                for (i = 0; i < myObstaclesL.length; i += 1) {
+                    myObstaclesL[i].x += objSpeed;
+                    myObstaclesL[i].update();
+                }
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(30, 30, "whip.png", x, Math.floor(Math.random() * 240) + 1, "image"));
+                    myCollection.push(new component(30, 30, "whip.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
-                    myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                realScore = myCollectionScore;
+                realScore = (myCollectionScore*8) + totalScore;
                 timeRemaining -= 1/60;
                 myScore.text = "Pleasure: " + realScore;
                 myScore.update();
@@ -352,7 +387,7 @@
                 <span class="btn btn-info control-button" onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
                 <span class="btn btn-info control-button" onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
                 <div style="font-size:12px;color: #fff">
-                    <strong style="font-size: 18px;">A Typical Night at Nathan's: Blitz</strong><br>
+                    <strong style="font-size: 18px;">A Typical Night at Nathan's: Blitz Mode</strong><br>
                     Collect as many WHIPS as you can before time runs out or you lose all 3 lives!<br>
                     Use the ARROW KEYS, WASD or the controls above to move Nathan<br><br>
                 </div>
