@@ -91,7 +91,7 @@
         </div>
         <!-- A Very Special Night at Brendon's -->
         <div class="col-xs-4">
-            <div id="gamemode_soon" class="thumbnail thumbnailFloat">
+            <div id="gamemode_brendon" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/brendon.png);">
                     <div class="thumbnailBanner">
                         <span class="thumbnailHeader"><strong>A <i>Very</i> Special Night at Brendon's</strong></span><br>
@@ -111,7 +111,7 @@
         </div>
         <!-- Blitz -->
         <div class="col-xs-4">
-            <div id="gamemode_soon" class="thumbnail thumbnailFloat">
+            <div id="gamemode_blitz" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/blitz.png);">
                     <div class="thumbnailBanner">
                         <span class="thumbnailHeader"><strong>Blitz Mode</strong></span><br>
@@ -130,23 +130,22 @@
         </div>
         <!-- Unknown -->
         <div class="col-xs-4">
-            <div id="gamemode_soon" class="thumbnail thumbnailFloat">
-                <div class="thumbnailImage" style="background-image: url();">
+            <div id="gamemode_costume" class="thumbnail thumbnailFloat">
+                <div class="thumbnailImage" style="background-image: url(assets/img/costume.png);">
                     <div class="thumbnailBanner">
-                        <span class="thumbnailHeader"><strong>A <i>Very</i> Special Night Shopping</strong></span><br>
+                        <span class="thumbnailHeader"><strong>A <i>Very</i> Special Night Shopping with Tayla</strong></span><br>
                         <span class="mapGamemode"><strong>Collect as many Banana and Bunny costumes as you can</strong></span>
                     </div>
                     <div class="thumbnailLabels">
-                        <!--<span class="label label-primary mapLabel">New</span>-->
-                        <span class="label label-danger mapLabel">Coming Soon</span>
+                        <span class="label label-primary mapLabel">New</span>
                         <span class="label label-info mapLabel">Special Release</span>
                         <span class="label label-success mapLabel">2-Player Support</span>
                         <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </div>
                 </div>
-                <div class="thumbnailAuthors"><small>Best Score: <span id="unknown-best">0</span></small></div>
+                <div class="thumbnailAuthors"><small>P1 Best Score: <span id="costume-best-1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P2 Best Score: <span id="costume-best-2">0</span></small></div>
                 <div style="padding-top:2%;" class="center">
-                    <span class="btn btn-info-disabled thumbnailButton" role="button">Play Game</span>
+                    <span><a href="games/costume.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
                 </div>
             </div>
         </div>
@@ -154,22 +153,22 @@
         <div class="col-xs-4">
             <div class="thumbnail thumbnailFloat topMargin">
                 <div class="label-desc black-font">
-                    <img class="saltImage" src="games/salt.png">
+                    <img class="saltImage" src="games/salts/salt.png">
                     <span class="infoHeader">Salt</span><br>
                     <span class="description">Common salt.. gradual increase in movement speed and spawn rate.</span>
                 </div>
                 <div class="label-danger label-desc">
-                    <img class="saltImage" src="games/salt-red.png">
+                    <img class="saltImage" src="games/salts/salt-red.png">
                     <span class="infoHeader">Red Salt</span><br>
                     <span class="description">Super fast salt.. size increases as the player score increases. Found in Insane Mode and Super Insane Mode.</span>
                 </div>
                 <div class="label-info label-desc">
-                    <img class="saltImage" src="games/salt-blue.png">
+                    <img class="saltImage" src="games/salts/salt-blue.png">
                     <span class="infoHeader">Blue Salt</span><br>
                     <span class="description">Reduces pleasure by 18 and slows the player. Found in Deflation Mode and Super Insane Mode.</span>
                 </div>
                 <div class="label-default label-desc">
-                    <img class="saltImage" src="games/salt-grey.png">
+                    <img class="saltImage" src="games/salts/salt-grey.png">
                     <span class="infoHeader">Dark Grey Salt</span><br>
                     <span class="description">Appears from both the left and right sides. Only found in Blitz Mode.</span>
                 </div>
@@ -181,6 +180,7 @@
                 <span class="infoHeader">Recent Changes</span><hr>
                 19-04-16:
                 <ul>
+                    <li>Added <i>A Very Special Night Shopping with Tayla</i></li>
                     <li>Added <i>Blitz Mode</i></li>
                 </ul>
                 15-04-16:
@@ -191,10 +191,6 @@
                 <ul>
                     <li>Remove size changes in blue salt</li>
                     <li>Reduce collection score penalty for salt spawn rate</li>
-                </ul>
-                13-04-16:
-                <ul>
-                    <li>Added <i>Deflation Mode</i></li>
                 </ul>
             </div>
         </div>
@@ -208,6 +204,8 @@
                 if (cacheJS.get({id: "valueScoreHigh-deflate"}) == null) {cacheJS.set({id: "valueScoreHigh-deflate"}, 0);}
                 if (cacheJS.get({id: "valueScoreHigh-blitz"}) == null) {cacheJS.set({id: "valueScoreHigh-blitz"}, 0);}
                 if (cacheJS.get({id: "valueScoreHigh-brendon"}) == null) {cacheJS.set({id: "valueScoreHigh-brendon"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh-costume-tayla"}) == null) {cacheJS.set({id: "valueScoreHigh-costume-tayla"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh-costume-nathan"}) == null) {cacheJS.set({id: "valueScoreHigh-costume-nathan"}, 0);}
                 loadScores();
             }
             // Load high scores into HTML thumbnails
@@ -218,6 +216,8 @@
                 document.getElementById("deflate-best").innerHTML = cacheJS.get({id: "valueScoreHigh-deflate"});
                 document.getElementById("blitz-best").innerHTML = cacheJS.get({id: "valueScoreHigh-blitz"});
                 document.getElementById("brendon-best").innerHTML = cacheJS.get({id: "valueScoreHigh-brendon"});
+                document.getElementById("costume-best-1").innerHTML = cacheJS.get({id: "valueScoreHigh-costume-tayla"});
+                document.getElementById("costume-best-2").innerHTML = cacheJS.get({id: "valueScoreHigh-costume-nathan"});
             }
         </script>
     </body>

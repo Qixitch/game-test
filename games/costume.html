@@ -1,0 +1,550 @@
+<html>
+    <head>
+        <title>Typical Night at Nathan's</title>
+        <link rel="icon" type="image/png" href="player.png" />
+        <meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <style>
+        </style>
+        <script src="../assets/cacheJS.js"></script>
+        <link rel="stylesheet" href="../assets/main.css">
+        <link rel="stylesheet" href="../assets/bootstrap.css">
+        <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+    </head>
+    <body class="mainElement" onload="startGame()">
+        <script>
+            function reloadPage() {
+        location.reload();
+            }
+        </script>
+        <script>
+            function startGame() {
+                myGamePiece = new component(30, 28, "costume/player-4.png", 200, 115, "image");
+                myGamePiece2 = new component(30, 40, "player.png", 240, 115, "image");
+                player1Title = new component("12px", "Josefin Sans", "black", 12, 16, "text");
+                myScore = new component("18px", "Josefin Sans", "black", 12, 34, "text");
+                myLives = new component("18px", "Josefin Sans", "black", 12, 52, "text");
+                player2Title = new component("12px", "Josefin Sans", "black", 412, 16, "text");
+                myScore2 = new component("18px", "Josefin Sans", "black", 378, 34, "text");
+                myLives2 = new component("18px", "Josefin Sans", "black", 338, 52, "text");
+                myTimer = new component("12px", "Josefin Sans", "black", 190, 16, "text");
+                myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
+                myStatPlayer = new component("9px", "Josefin Sans", "black", 5, 246, "text");
+                myStatCollection = new component("9px", "Josefin Sans", "black", 5, 255, "text");
+                myStatObject = new component("9px", "Josefin Sans", "black", 5, 265, "text");
+                myStatVersion = new component("9px", "Josefin Sans", "black", 420, 265, "text");
+                myGameArea.start();
+                loadScores();
+            }
+            
+            var myGamePiece;
+            var myObstacles = [];
+            var myObstaclesL = [];
+            var myCollection = [];
+            var myCollection2 = [];
+            var myScore;
+            var myStats;
+            var myCollectionScore = 0;
+            var myCollectionScore2 = 0;
+            var saltTouched = 0;
+            var gameVersion = "0.1.0";
+            
+            var realScore;
+            var realScore2;
+            var totalScore = 0;
+            
+            var timeRemaining = 120;
+            var livesRemaining = 3;
+            var livesRemaining2 = 3;
+            
+            var playerSlowTime = 0;
+            var playerSlowTime2 = 0;
+            var objectSlowTime = 0;
+            
+            var myGameArea = {
+                canvas : document.createElement("canvas"),
+                start : function() {
+                    this.canvas.width = 480;
+                    this.canvas.height = 270;
+                    this.context = this.canvas.getContext("2d");
+                    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                    this.frameNo = 0; 
+                    this.interval = setInterval(updateGameArea, 20);
+                    window.addEventListener('keydown', function (e) {
+                        myGameArea.keys = (myGameArea.keys || []);
+                        myGameArea.keys[e.keyCode] = true;
+                    })
+                    window.addEventListener('keyup', function (e) {
+                        myGameArea.keys[e.keyCode] = false; 
+                    })
+                    window.addEventListener('keydown', function (e) {
+                        myGameArea.key = (myGameArea.key || []);
+                        myGameArea.key[e.keyCode] = true;
+                    })
+                },
+                clear : function() {
+                    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                },
+                stop : function() {
+                    clearInterval(this.interval);
+                }
+            }
+            
+            function everyinterval(n) {
+                if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+                return false;
+            }
+            
+            function component(width, height, color, x, y, type) {
+                this.type = type;
+                if (type == "image") {
+                    this.image = new Image();
+                    this.image.src = color;
+                }
+                this.width = width;
+                this.height = height;
+                this.speedX = 0;
+                this.speedY = 0;
+                this.x = x;
+                this.y = y;
+                this.update = function() {
+                    ctx = myGameArea.context;
+                    if (this.type == "text") {
+                        ctx.font = this.width + " " + this.height;
+                        ctx.fillStyle = color;
+                        ctx.fillText(this.text, this.x, this.y);
+                    } else {
+                        if (type == "image") {
+                            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+                        } else {
+                            ctx.fillStyle = color;
+                            ctx.fillRect(this.x, this.y, this.width, this.height);
+                        }
+                    }
+                }
+                this.newPos = function() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.hitTop();
+                    this.hitBottom();
+                    this.hitLeft();
+                    this.hitRight();
+                }
+                this.hitTop = function() {
+                    var areatop = 0;
+                    if (this.y < areatop) {
+                        this.y = areatop;
+                    }
+                }
+                this.hitBottom = function() {
+                    var areabottom = myGameArea.canvas.height - this.height;
+                    if (this.y > areabottom) {
+                        this.y = areabottom;
+                    }
+                }
+                this.hitLeft = function() {
+                    var arealeft = 0;
+                    if (this.x < arealeft) {
+                        this.x = arealeft;
+                    }
+                }
+                this.hitRight = function() {
+                    var arearight = myGameArea.canvas.width - this.width;
+                    if (this.x > arearight) {
+                        this.x = arearight;
+                    }
+                }
+                this.crashWith = function(otherobj) {
+                    var myleft = this.x;
+                    var myright = this.x + (this.width);
+                    var mytop = this.y;
+                    var mybottom = this.y + (this.height);
+                    var otherleft = otherobj.x;
+                    var otherright = otherobj.x + (otherobj.width);
+                    var othertop = otherobj.y;
+                    var otherbottom = otherobj.y + (otherobj.height);
+                    var crash = true;
+                    if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                        crash = false;
+                    }
+                    return crash;
+                }
+                this.crashWithScore = function(otherobjA) {
+                    var myleftA = this.x;
+                    var myrightA = this.x + (this.width);
+                    var mytopA = this.y;
+                    var mybottomA = this.y + (this.height);
+                    var otherleftA = otherobjA.x;
+                    var otherrightA = otherobjA.x + (otherobjA.width);
+                    var othertopA = otherobjA.y;
+                    var otherbottomA = otherobjA.y + (otherobjA.height);
+                    var crashScore = true;
+                    if ((mybottomA < othertopA) || (mytopA > otherbottomA) || (myrightA < otherleftA) || (myleftA > otherrightA)) {
+                        crashScore = false;
+                    }
+                    return crashScore;
+                }
+            }
+            
+            function updateGameArea() {
+                var x, y;
+                var intRate = 120;
+                var intSpeed = 1;
+                var objRate;
+                var objSpeed;
+                var playerSpeed;
+                var playerSpeed2;
+                var collectionRate2 = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
+                var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 9.2);
+                var collectionSpeed = 2;
+                if (playerSpeed > 2.8) {
+                    playerSpeed = 2.8;
+                }
+                if (playerSpeed2 > 2.4) {
+                    playerSpeed2 = 2.4;
+                }
+                // Player 1 Slowness
+                if (playerSlowTime > 0) {
+                    playerSlowTime -= 1;
+                    playerSpeed = 0.8;
+                } else {
+                    playerSlowTime = 0;
+                    playerSpeed = 2.1 + (myCollectionScore2/35);
+                }
+                // Player 2 Slowness
+                if (playerSlowTime2 > 0) {
+                    playerSlowTime2 -= 1;
+                    playerSpeed2 = 0.8;
+                } else {
+                    playerSlowTime2 = 0;
+                    playerSpeed2 = 1.7 + (myCollectionScore/35);
+                }
+                if (objectSlowTime > 0) {
+                    objectSlowTime -= 1;
+                    objSpeed = intSpeed;
+                } else {
+                    objectSlowTime = 0;
+                    objSpeed = intSpeed + (myGameArea.frameNo/950);
+                }
+                objRate = intRate - Math.round(myGameArea.frameNo/60);
+                if (objRate < 26) {
+                    objRate = 26;
+                }
+                totalScore = Math.round(myGameArea.frameNo/60);
+                // Player 1 Crash Conditions
+                for (i = 0; i < myObstacles.length; i += 1) {
+                    if (myGamePiece.crashWith(myObstacles[i])) {
+                        reduceLives();
+                        myObstacles = [];
+                        myObstaclesL = [];
+                        myGamePiece.x = 220;
+                        myGamePiece.y = 115;
+                        myGamePiece.update();
+                        playerSlowTime = 60;
+                        objectSlowTime = 120;
+                        return;
+                    } 
+                }
+                for (i = 0; i < myObstaclesL.length; i += 1) {
+                    if (myGamePiece.crashWith(myObstaclesL[i])) {
+                        reduceLives();
+                        myObstacles = [];
+                        myObstaclesL = [];
+                        myGamePiece.x = 220;
+                        myGamePiece.y = 115;
+                        myGamePiece.update();
+                        playerSlowTime = 60;
+                        objectSlowTime = 120;
+                        return;
+                    } 
+                }
+                for (i = 0; i < myCollection.length; i += 1) {
+                    if (myGamePiece.crashWithScore(myCollection[i])) {
+                        updateCollectionScore();
+                        myCollection[i].y += -9000;
+                        myCollection[i].update();
+                        return;
+                    }
+                }
+                for (i = 0; i < myCollection2.length; i += 1) {
+                    if (myGamePiece.crashWithScore(myCollection2[i])) {
+                        updateCollectionScore();
+                        myCollection2[i].y += -9000;
+                        myCollection2[i].update();
+                        return;
+                    }
+                }
+                // Player 2 Crash Conditions
+                for (i = 0; i < myObstacles.length; i += 1) {
+                    if (myGamePiece2.crashWith(myObstacles[i])) {
+                        reduceLives2();
+                        myObstacles = [];
+                        myObstaclesL = [];
+                        myGamePiece2.x = 220;
+                        myGamePiece2.y = 115;
+                        myGamePiece2.update();
+                        playerSlowTime2 = 60;
+                        objectSlowTime = 120;
+                        return;
+                    } 
+                }
+                for (i = 0; i < myObstaclesL.length; i += 1) {
+                    if (myGamePiece2.crashWith(myObstaclesL[i])) {
+                        reduceLives2();
+                        myObstacles = [];
+                        myObstaclesL = [];
+                        myGamePiece2.x = 220;
+                        myGamePiece2.y = 115;
+                        myGamePiece2.update();
+                        playerSlowTime2 = 60;
+                        objectSlowTime = 120;
+                        return;
+                    } 
+                }
+                for (i = 0; i < myCollection.length; i += 1) {
+                    if (myGamePiece2.crashWithScore(myCollection[i])) {
+                        updateCollectionScore2();
+                        myCollection[i].y += -9000;
+                        myCollection[i].update();
+                        return;
+                    }
+                }
+                for (i = 0; i < myCollection2.length; i += 1) {
+                    if (myGamePiece2.crashWithScore(myCollection2[i])) {
+                        updateCollectionScore2();
+                        myCollection2[i].y += -9000;
+                        myCollection2[i].update();
+                        return;
+                    }
+                }
+                function updateCollectionScore() {
+                    myCollectionScore += 1;
+                }
+                function reduceLives() {
+                    livesRemaining -= 1;
+                }
+                function updateCollectionScore2() {
+                    myCollectionScore2 += 1;
+                }
+                function reduceLives2() {
+                    livesRemaining2 -= 1;
+                }
+                myGameArea.clear();
+                myGameArea.frameNo += 1;
+                // Right Coming Objects
+                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myObstacles.push(new component(45, 27, "salts/salt-grey.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                }
+                for (i = 0; i < myObstacles.length; i += 1) {
+                    myObstacles[i].x += -objSpeed;
+                    myObstacles[i].update();
+                }
+                // Left Coming Objects
+                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myObstaclesL.push(new component(45, 27, "salts/salt-grey-l.png", -60, Math.floor(Math.random() * 250) + 1, "image"));
+                }
+                for (i = 0; i < myObstaclesL.length; i += 1) {
+                    myObstaclesL[i].x += objSpeed;
+                    myObstaclesL[i].update();
+                }
+                // Bananas
+                if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myCollection.push(new component(16, 58, "costume/banana.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
+                }
+                for (i = 0; i < myCollection.length; i += 1) {
+                    myCollection[i].update();
+                }
+                // Bananas
+                if (myGameArea.frameNo == 1 || everyinterval(collectionRate2)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myCollection2.push(new component(30, 48, "costume/bunny.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
+                }
+                for (i = 0; i < myCollection2.length; i += 1) {
+                    myCollection2[i].update();
+                }
+                realScore = (myCollectionScore*8);
+                realScore2 = (myCollectionScore2*8);
+                timeRemaining -= 1/60;
+                //Player 1 Titles
+                player1Title.text = "Tayla (p1)";
+                player1Title.update();
+                myScore.text = "Pleasure: " + realScore;
+                myScore.update();
+                myLives.text = "Lives Remaining: " + livesRemaining;
+                myLives.update();
+                //Player 2 Titles
+                player2Title.text = "Nathan (p2)";
+                player2Title.update();
+                myScore2.text = "Pleasure: " + realScore2;
+                myScore2.update();
+                myLives2.text = "Lives Remaining: " + livesRemaining2;
+                myLives2.update();
+                //Timer Title
+                myTimer.text = "Time Remaining: " + Math.round(timeRemaining) + "s";
+                myTimer.update();
+                var enableStat = document.getElementById("show-stats").checked;
+                if (enableStat) {
+                    myStatGame.text = "Time elapsed = " + totalScore + " seconds";
+                    myStatGame.update();
+                    if (playerSlowTime < 1) {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
+                    } else {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed + ", slow duration = " + playerSlowTime;
+                    }
+                    myStatPlayer.update();
+                    myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals, movement speed = " + collectionSpeed;
+                    myStatCollection.update();
+                    myStatObject.text = "Obstacles Stats: spawn delay = " + objRate + " intervals, movement speed = " + objSpeed;
+                    myStatObject.update();
+                }
+                myStatVersion.text = "version " + gameVersion;
+                myStatVersion.update();
+                // Player 1 Movement
+                myGamePiece.speedX = 0;
+                myGamePiece.speedY = 0;
+                if (myGameArea.keys && myGameArea.keys[37] || checkMoveleft) {myGamePiece.speedX = -playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[39] || checkMoveright) {myGamePiece.speedX = playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[38] || checkMoveup) {myGamePiece.speedY = -playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[40] || checkMovedown) {myGamePiece.speedY = playerSpeed; }
+                myGamePiece.newPos();
+                myGamePiece.update();
+                if (livesRemaining <= 0) {
+                    myGamePiece.width = -100;
+                    myGamePiece.height = -100;
+                    myGamePiece.x = -90000;
+                    myGamePiece.y = -90000;
+                }
+                // Player 2 Movement
+                myGamePiece2.speedX = 0;
+                myGamePiece2.speedY = 0;
+                if (myGameArea.keys && myGameArea.keys[65]) {myGamePiece2.speedX = -playerSpeed2; }
+                if (myGameArea.keys && myGameArea.keys[68]) {myGamePiece2.speedX = playerSpeed2; }
+                if (myGameArea.keys && myGameArea.keys[87]) {myGamePiece2.speedY = -playerSpeed2; }
+                if (myGameArea.keys && myGameArea.keys[83]) {myGamePiece2.speedY = playerSpeed2; }
+                myGamePiece2.newPos();
+                myGamePiece2.update();
+                if (livesRemaining2 <= 0) {
+                    myGamePiece2.width = -100;
+                    myGamePiece2.height = -100;
+                    myGamePiece2.x = -90000;
+                    myGamePiece2.y = -90000;
+                }
+                // End Game Condition
+                if (livesRemaining <= 0 && livesRemaining2 <= 0 || timeRemaining <= 0 ) {
+                    updateScores();
+                    myGameArea.stop();
+                    return;
+                }
+            }
+            var checkMoveup = false;
+            var checkMovedown = false;
+            var checkMoveleft = false;
+            var checkMoveright = false;
+            function moveup() {
+                checkMoveup = true;
+                checkMovedown = false;
+                checkMoveleft = false;
+                checkMoveright = false;
+            }
+            function movedown() {
+                checkMovedown = true;
+                checkMoveup = false;
+                checkMoveleft = false;
+                checkMoveright = false;
+            }
+            
+            function moveleft() {
+                checkMoveleft = true;
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveright = false;
+            }
+
+            function moveright() {
+                checkMoveright = true;
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveleft = false;
+            }
+            
+            function stopMove() {
+                checkMoveup = false;
+                checkMovedown = false;
+                checkMoveleft = false;
+                checkMoveright = false;
+                myGamePiece.speedX = 0;
+                myGamePiece.speedY = 0; 
+            }
+            
+            function updateScores() {
+                // Player 1
+                cacheJS.set({id: "valueScoreRecent-costume-tayla"}, realScore);
+                if (cacheJS.get({id: "valueScoreHigh-costume-tayla"}) == null) {
+                    cacheJS.set({id: "valueScoreHigh-costume-tayla"}, realScore);
+                } else if (realScore > cacheJS.get({id: "valueScoreHigh-costume-tayla"})) {
+                    cacheJS.set({id: "valueScoreHigh-costume-tayla"}, realScore);
+                }
+                // Player 2
+                cacheJS.set({id: "valueScoreRecent-costume-nathan"}, realScore2);
+                if (cacheJS.get({id: "valueScoreHigh-costume-nathan"}) == null) {
+                    cacheJS.set({id: "valueScoreHigh-costume-tnathan"}, realScore2);
+                } else if (realScore2 > cacheJS.get({id: "valueScoreHigh-costume-nathan"})) {
+                    cacheJS.set({id: "valueScoreHigh-costume-nathan"}, realScore2);
+                }
+                loadScores();
+            }
+            
+            function resetScores() {
+                // Player 1
+                cacheJS.set({id: "valueScoreHigh-costume-tayla"}, 0);
+                cacheJS.set({id: "valueScoreRecent-costume-tayla"}, 0);
+                // Player 2
+                cacheJS.set({id: "valueScoreHigh-costume-nathan"}, 0);
+                cacheJS.set({id: "valueScoreRecent-costume-nathan"}, 0);
+                loadScores();
+            }
+            
+            function loadScores() {
+                // Player 1
+                document.getElementById("recent-score-1").innerHTML = cacheJS.get({id: "valueScoreRecent-costume-tayla"});
+                document.getElementById("high-score-1").innerHTML = cacheJS.get({id: "valueScoreHigh-costume-tayla"});
+                // Player 2
+                document.getElementById("recent-score-2").innerHTML = cacheJS.get({id: "valueScoreRecent-costume-nathan"});
+                document.getElementById("high-score-2").innerHTML = cacheJS.get({id: "valueScoreHigh-costume-nathan"});
+            }
+            
+        </script>
+        <br>
+        <div class="mainBox">
+            <div class="center">
+                <span class="btn btn-info control-button" style="padding-left: 24px; padding-right: 24px;" onmouseover="moveup()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">UP</span><br><br><br>
+                <span class="btn btn-info control-button" style="padding-left: 16px; padding-right: 16px;" onmouseover="moveleft()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">LEFT</span>
+                <span class="btn btn-info control-button" style="padding-left: 15px; padding-right: 15px;" onmouseover="stopMove()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">IDLE</span>
+                <span class="btn btn-info control-button" onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
+                <span class="btn btn-info control-button" onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
+                <div style="font-size:12px;color: #fff">
+                    <strong style="font-size: 18px;">A <i>Very</i> Special Night Shopping with Tayla</strong><br>
+                    Collect as many BANANA or BUNNY costumes as you can before time runs out<br>
+                    Use the ARROW KEYS to move Tayla and WASD to move Nathan<br><br>
+                </div>
+                <div class="well center" style="max-width:360px;">
+                    Player 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Best Score: <span id="high-score-1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Previous Score: <span id="recent-score-1">0</span><br>
+                    Player 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Best Score: <span id="high-score-2">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Previous Score: <span id="recent-score-2">0</span>
+                </div>
+                <button class="btn btn-success" style="margin-right: 32px;" onclick="reloadPage()">Reload Game</button>
+                <button class="btn btn-danger" style="margin-right: 32px;" onclick="resetScores()">Reset Scores</button>
+                <span style="color: #fff;vertical-align: 3px;">Show Game Stats</span> <input type="checkbox" id="show-stats" checked="checked" /><br>
+            </div>
+        </div>
+    </body>
+</html>
