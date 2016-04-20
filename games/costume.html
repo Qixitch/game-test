@@ -23,12 +23,11 @@
                 player1Title = new component("12px", "Josefin Sans", "black", 12, 16, "text");
                 myScore = new component("18px", "Josefin Sans", "black", 12, 34, "text");
                 myLives = new component("18px", "Josefin Sans", "black", 12, 52, "text");
-                player2Title = new component("12px", "Josefin Sans", "black", 412, 16, "text");
-                myScore2 = new component("18px", "Josefin Sans", "black", 378, 34, "text");
-                myLives2 = new component("18px", "Josefin Sans", "black", 338, 52, "text");
+                player2Title = new component("12px", "Josefin Sans", "black", 330, 16, "text");
+                myScore2 = new component("18px", "Josefin Sans", "black", 330, 34, "text");
+                myLives2 = new component("18px", "Josefin Sans", "black", 330, 52, "text");
                 myTimer = new component("12px", "Josefin Sans", "black", 190, 16, "text");
-                myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
-                myStatPlayer = new component("9px", "Josefin Sans", "black", 5, 246, "text");
+                myStatGame = new component("9px", "Josefin Sans", "black", 5, 246, "text");
                 myStatCollection = new component("9px", "Josefin Sans", "black", 5, 255, "text");
                 myStatObject = new component("9px", "Josefin Sans", "black", 5, 265, "text");
                 myStatVersion = new component("9px", "Josefin Sans", "black", 420, 265, "text");
@@ -374,14 +373,14 @@
                 //Player 1 Titles
                 player1Title.text = "Tayla (p1)";
                 player1Title.update();
-                myScore.text = "Pleasure: " + realScore;
+                myScore.text = "Money Spent: $" + realScore;
                 myScore.update();
                 myLives.text = "Lives Remaining: " + livesRemaining;
                 myLives.update();
                 //Player 2 Titles
                 player2Title.text = "Nathan (p2)";
                 player2Title.update();
-                myScore2.text = "Pleasure: " + realScore2;
+                myScore2.text = "Money Spent: $" + realScore2;
                 myScore2.update();
                 myLives2.text = "Lives Remaining: " + livesRemaining2;
                 myLives2.update();
@@ -392,13 +391,7 @@
                 if (enableStat) {
                     myStatGame.text = "Time elapsed = " + totalScore + " seconds";
                     myStatGame.update();
-                    if (playerSlowTime < 1) {
-                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
-                    } else {
-                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed + ", slow duration = " + playerSlowTime;
-                    }
-                    myStatPlayer.update();
-                    myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals, movement speed = " + collectionSpeed;
+                    myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals";
                     myStatCollection.update();
                     myStatObject.text = "Obstacles Stats: spawn delay = " + objRate + " intervals, movement speed = " + objSpeed;
                     myStatObject.update();
@@ -534,12 +527,12 @@
                     Use the ARROW KEYS to move Tayla and WASD to move Nathan<br><br>
                 </div>
                 <div class="well center" style="max-width:360px;">
-                    Player 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Best Score: <span id="high-score-1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Previous Score: <span id="recent-score-1">0</span><br>
-                    Player 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Best Score: <span id="high-score-2">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Previous Score: <span id="recent-score-2">0</span>
+                    P1&nbsp;&nbsp;&nbsp;
+                    Greatest Spending: <span id="high-score-1">0</span>&nbsp;&nbsp;&nbsp;
+                    Previous Spending: <span id="recent-score-1">0</span><br>
+                    P2&nbsp;&nbsp;&nbsp;
+                    Greatest Spending: <span id="high-score-2">0</span>&nbsp;&nbsp;&nbsp;
+                    Previous Spending: <span id="recent-score-2">0</span>
                 </div>
                 <button class="btn btn-success" style="margin-right: 32px;" onclick="reloadPage()">Reload Game</button>
                 <button class="btn btn-danger" style="margin-right: 32px;" onclick="resetScores()">Reset Scores</button>
