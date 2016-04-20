@@ -20,8 +20,8 @@
             function startGame() {
                 myGamePiece = new component(30, 40, "player.png", 220, 115, "image");
                 myScore = new component("18px", "Josefin Sans", "black", 12, 22, "text");
-                myTimer = new component("18px", "Josefin Sans", "black", 12, 40, "text");
-                myLives = new component("18px", "Josefin Sans", "black", 330, 22, "text");
+                myLives = new component("18px", "Josefin Sans", "black", 12, 42, "text");
+                myTimer = new component("12px", "Josefin Sans", "black", 190, 16, "text");
                 myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
                 myStatPlayer = new component("9px", "Josefin Sans", "black", 5, 246, "text");
                 myStatCollection = new component("9px", "Josefin Sans", "black", 5, 255, "text");
@@ -39,7 +39,7 @@
             var myStats;
             var myCollectionScore = 0;
             var saltTouched = 0;
-            var gameVersion = "0.1.0";
+            var gameVersion = "0.1.1";
             
             var realScore;
             var totalScore = 0;
@@ -361,7 +361,7 @@
                 cacheJS.set({id: "valueScoreRecent-blitz"}, realScore);
                 if (cacheJS.get({id: "valueScoreHigh-blitz"}) == null) {
                     cacheJS.set({id: "valueScoreHigh-blitz"}, realScore);
-                } else if (totalScore > cacheJS.get({id: "valueScoreHigh-blitz"})) {
+                } else if (realScore > cacheJS.get({id: "valueScoreHigh-blitz"})) {
                     cacheJS.set({id: "valueScoreHigh-blitz"}, realScore);
                 }
                 loadScores();
