@@ -9,6 +9,19 @@
         <link rel="stylesheet" href="../assets/main.css">
         <link rel="stylesheet" href="../assets/bootstrap.css">
         <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+        <style>
+            canvas {
+                border: 2px solid #222222;
+                background: url(binding/background.png);
+            }
+            @font-face {
+                font-family: Upheavtt;
+                src: url(binding/upheavtt.ttf);
+            }
+            * {
+                font-family: 'Upheavtt', sans-serif;
+            }
+        </style>
     </head>
     <body class="mainElement" onload="startGame()">
         <script>
@@ -19,26 +32,41 @@
         <script>
             function startGame() {
                 myGamePiece = new component(30, 40, "player.png", 220, 115, "image");
-                myScore = new component("18px", "Josefin Sans", "black", 12, 22, "text");
-                myTimer = new component("12px", "Josefin Sans", "black", 190, 16, "text");
-                myStatGame = new component("9px", "Josefin Sans", "black", 5, 237, "text");
-                myStatPlayer = new component("9px", "Josefin Sans", "black", 5, 246, "text");
-                myStatCollection = new component("9px", "Josefin Sans", "black", 5, 255, "text");
-                myStatObject = new component("9px", "Josefin Sans", "black", 5, 265, "text");
-                myStatVersion = new component("9px", "Josefin Sans", "black", 420, 265, "text");
+                myScore = new component("18px", "Upheavtt", "black", 12, 22, "text");
+                myLives = new component("18px", "Upheavtt", "black", 12, 42, "text");
+                myTimer = new component("12px", "Upheavtt", "black", 190, 16, "text");
+                myStatProjectile = new component("9px", "Upheavtt", "black", 5, 237, "text");
+                myStatPlayer = new component("9px", "Upheavtt", "black", 5, 246, "text");
+                myStatCollection = new component("9px", "Upheavtt", "black", 5, 255, "text");
+                myStatObject = new component("9px", "Upheavtt", "black", 5, 265, "text");
+                myStatVersion = new component("9px", "Upheavtt", "black", 420, 265, "text");
                 myGameArea.start();
                 loadScores();
             }
             
             var myGamePiece;
             var myObstacles = [];
+            var myObstaclesL = [];
             var myCollection = [];
+            var playerProjectileL = [];
+            var playerProjectileR = [];
+            var playerProjectileU = [];
+            var playerProjectileD = [];
             var myScore;
             var myStats;
             var myCollectionScore = 0;
-            var gameVersion = "- DV";
+            var saltTouched = 0;
+            var gameVersion = "0.1.1";
             
             var realScore;
+            var totalScore = 0;
+            
+            var timeRemaining = 120;
+            var intLives = 9999;
+            var livesRemaining = intLives;
+            
+            var playerSlowTime = 0;
+            var objectSlowTime = 0;
             
             var myGameArea = {
                 canvas : document.createElement("canvas"),
@@ -167,35 +195,53 @@
             
             var xSpeed = 1;
             var ySpeed = 1;
+            var projectileMovement = 0;
+            var projectileRate = 24;
             
             function updateGameArea() {
-                //ySpeed =  ySpeed * (2.5 / Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed));
-                //xSpeed = xSpeed * (2.5 / Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed));
-                
                 var x, y;
-                var intRate = 80;
+                var intRate = 120;
                 var intSpeed = 1;
                 var objRate;
                 var objSpeed;
                 var playerSpeed;
                 var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
                 var collectionSpeed = 2;
-                playerSpeed = 1.7 + (myCollectionScore/35);
                 if (playerSpeed > 2.4) {
                     playerSpeed = 2.4;
                 }
-                objRate = (intRate - (myCollectionScore/2)) - Math.round((myGameArea.frameNo/60));
-                if (objRate < 10) {
-                    objRate = 10;
+                if (playerSlowTime > 0) {
+                    playerSlowTime -= 1;
+                    playerSpeed = 0.8;
+                } else {
+                    playerSlowTime = 0;
+                    playerSpeed = 1.7 + (myCollectionScore/35);
                 }
-                objSpeed = intSpeed + (myGameArea.frameNo/640);
-                var totalScore = Math.round(myGameArea.frameNo/60);
+                if (objectSlowTime > 0) {
+                    objectSlowTime -= 1;
+                    objSpeed = intSpeed;
+                } else {
+                    objectSlowTime = 0;
+                    objSpeed = intSpeed + (myGameArea.frameNo/950);
+                }
+                objRate = intRate - Math.round(myGameArea.frameNo/60);
+                if (objRate < 46) {
+                    objRate = 46;
+                }
+                totalScore = Math.round(myGameArea.frameNo/60);
                 for (i = 0; i < myObstacles.length; i += 1) {
                     if (myGamePiece.crashWith(myObstacles[i])) {
-                        updateScores();
-                        myGameArea.stop();
+                        reduceLives();
+                        myObstacles = [];
                         return;
-                    } 
+                    }
+                }
+                for (i = 0; i < myObstaclesL.length; i += 1) {
+                    if (myGamePiece.crashWith(myObstaclesL[i])) {
+                        reduceLives();
+                        myObstaclesL = [];
+                        return;
+                    }
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     if (myGamePiece.crashWithScore(myCollection[i])) {
@@ -208,37 +254,62 @@
                 function updateCollectionScore() {
                     myCollectionScore += 1;
                 }
+                function reduceLives() {
+                    livesRemaining -= 1;
+                }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
+                // Right Coming Objects
                 if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myObstacles.push(new component(34, 20, "salts/salt.png", x, myGamePiece.y, "image"));
+                    myObstacles.push(new component(19, 12, "binding/fly.png", x, Math.floor(Math.random() * 250) + 1, "image"));
                 }
-                for (i = 0; i < myObstacles.length; i += 1) {
+                for (i = 0; i < myObstacles.length; i ++) {
                     xSpeed = (myGamePiece.x - myObstacles[i].x) / 86;
                     ySpeed = (myGamePiece.y - myObstacles[i].y) / 86;
                     myObstacles[i].x += xSpeed;
                     myObstacles[i].y += ySpeed;
                     myObstacles[i].update();
                 }
+                // Left Coming Objects
+                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    myObstaclesL.push(new component(19, 12, "binding/fly.png", -60, Math.floor(Math.random() * 250) + 1, "image"));
+                }
+                for (i = 0; i < myObstaclesL.length; i ++) {
+                    xSpeed = (myGamePiece.x - myObstaclesL[i].x) / 86;
+                    ySpeed = (myGamePiece.y - myObstaclesL[i].y) / 86;
+                    myObstaclesL[i].x += xSpeed;
+                    myObstaclesL[i].y += ySpeed;
+                    myObstaclesL[i].update();
+                }
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(30, 30, "salts/whip.png", x, Math.floor(Math.random() * 240) + 1, "image"));
+                    myCollection.push(new component(12, 21, "binding/mushroom.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
-                    myCollection[i].x += -collectionSpeed;
                     myCollection[i].update();
                 }
-                realScore = Math.round((myGameArea.frameNo/60) + (myCollectionScore * 8));
+                realScore = (myCollectionScore*8) + totalScore;
+                timeRemaining -= 1/60;
                 myScore.text = "Score: " + realScore;
                 myScore.update();
+                myTimer.text = "Time elapsed: " + totalScore + "s";
+                myTimer.update();
+                myLives.text = "Health: " + livesRemaining + "/" + intLives;
+                myLives.update();
                 var enableStat = document.getElementById("show-stats").checked;
                 if (enableStat) {
-                    myStatGame.text = "Time elapsed = " + totalScore + " seconds";
-                    myStatGame.update();
-                    myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
+                    myStatProjectile.text = "Projectile Stats: fire rate = " + projectileRate + ", movement speed = " + projectileMovement;
+                    myStatProjectile.update();
+                    if (playerSlowTime < 1) {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
+                    } else {
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed + ", slow duration = " + playerSlowTime;
+                    }
                     myStatPlayer.update();
                     myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals, movement speed = " + collectionSpeed;
                     myStatCollection.update();
@@ -249,12 +320,76 @@
                 myStatVersion.update();
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0;
-                if (myGameArea.keys && myGameArea.keys[37] || myGameArea.keys && myGameArea.keys[65] || checkMoveleft) {myGamePiece.speedX = -playerSpeed; }
-                if (myGameArea.keys && myGameArea.keys[39] || myGameArea.keys && myGameArea.keys[68] || checkMoveright) {myGamePiece.speedX = playerSpeed; }
-                if (myGameArea.keys && myGameArea.keys[38] || myGameArea.keys && myGameArea.keys[87] || checkMoveup) {myGamePiece.speedY = -playerSpeed; }
-                if (myGameArea.keys && myGameArea.keys[40] || myGameArea.keys && myGameArea.keys[83] || checkMovedown) {myGamePiece.speedY = playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[65] || checkMoveleft) {myGamePiece.speedX = -playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[68] || checkMoveright) {myGamePiece.speedX = playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[87] || checkMoveup) {myGamePiece.speedY = -playerSpeed; }
+                if (myGameArea.keys && myGameArea.keys[83] || checkMovedown) {myGamePiece.speedY = playerSpeed; }
+                
+                projectileMovement = playerSpeed * 1.62;
+                // Projectile Left
+                if (myGameArea.keys && myGameArea.keys[37] || checkMoveright) {
+                    if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
+                        x = myGamePiece.x;
+                        y = myGamePiece.y;
+                        playerProjectileL.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
+                        if (playerProjectileL[i].x = myObstacles[i].x) {
+                            myObstacles[i].y = -9000;
+                        }
+                    }
+                }
+                for (i = 0; i < playerProjectileL.length; i += 1) {
+                    playerProjectileL[i].x += -projectileMovement;
+                    playerProjectileL[i].y += 0;
+                    playerProjectileL[i].update();
+                }
+                // Projectile Right
+                if (myGameArea.keys && myGameArea.keys[39] || checkMoveleft) {
+                    if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
+                        x = myGamePiece.x;
+                        y = myGamePiece.y;
+                        playerProjectileR.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
+                    }
+                }
+                for (i = 0; i < playerProjectileR.length; i += 1) {
+                    playerProjectileR[i].x += projectileMovement;
+                    playerProjectileR[i].y += 0;
+                    playerProjectileR[i].update();
+                }
+                // Projectile Down
+                if (myGameArea.keys && myGameArea.keys[38] || checkMovedown) {
+                    if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
+                        x = myGamePiece.x;
+                        y = myGamePiece.y;
+                        playerProjectileU.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
+                    }
+                }
+                for (i = 0; i < playerProjectileU.length; i += 1) {
+                    playerProjectileU[i].x += 0;
+                    playerProjectileU[i].y += -projectileMovement;
+                    playerProjectileU[i].update();
+                }
+                // Projectile Up
+                if (myGameArea.keys && myGameArea.keys[40] || checkMoveup) {
+                    if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
+                        x = myGamePiece.x;
+                        y = myGamePiece.y;
+                        playerProjectileD.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
+                    }
+                }
+                for (i = 0; i < playerProjectileD.length; i += 1) {
+                    playerProjectileD[i].x += 0;
+                    playerProjectileD[i].y += projectileMovement;
+                    playerProjectileD[i].update();
+                }
+                
                 myGamePiece.newPos();
                 myGamePiece.update();
+                if (livesRemaining <= 0) {
+                    updateScores();
+                    myGameArea.stop();
+                    return;
+                }
+                console.log(playerProjectileL[i].x);
             }
             var checkMoveup = false;
             var checkMovedown = false;
@@ -297,24 +432,24 @@
             }
             
             function updateScores() {
-                cacheJS.set({id: "valueScoreRecent-1"}, realScore);
-                if (cacheJS.get({id: "valueScoreHigh-1"}) == null) {
-                    cacheJS.set({id: "valueScoreHigh-1"}, realScore);
-                } else if (realScore > cacheJS.get({id: "valueScoreHigh-1"})) {
-                    cacheJS.set({id: "valueScoreHigh-1"}, realScore);
+                cacheJS.set({id: "valueScoreRecent-blitz"}, realScore);
+                if (cacheJS.get({id: "valueScoreHigh-blitz"}) == null) {
+                    cacheJS.set({id: "valueScoreHigh-blitz"}, realScore);
+                } else if (realScore > cacheJS.get({id: "valueScoreHigh-blitz"})) {
+                    cacheJS.set({id: "valueScoreHigh-blitz"}, realScore);
                 }
                 loadScores();
             }
             
             function resetScores() {
-                cacheJS.set({id: "valueScoreHigh-1"}, 0);
-                cacheJS.set({id: "valueScoreRecent-1"}, 0);
+                cacheJS.set({id: "valueScoreHigh-blitz"}, 0);
+                cacheJS.set({id: "valueScoreRecent-blitz"}, 0);
                 loadScores();
             }
             
             function loadScores() {
-                document.getElementById("recent-score-1").innerHTML = cacheJS.get({id: "valueScoreRecent-1"});
-                document.getElementById("high-score-1").innerHTML = cacheJS.get({id: "valueScoreHigh-1"});
+                document.getElementById("recent-score-1").innerHTML = cacheJS.get({id: "valueScoreRecent-blitz"});
+                document.getElementById("high-score-1").innerHTML = cacheJS.get({id: "valueScoreHigh-blitz"});
             }
         </script>
         <br>
@@ -326,9 +461,9 @@
                 <span class="btn btn-info control-button" onmouseover="moveright()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">RIGHT</span><br><br><br>
                 <span class="btn btn-info control-button" onmouseover="movedown()" onmouseout="stopMove()" ontouchend="stopMove()" ontouchcancel="stopMove()" onclick="void(0)">DOWN</span><br><br>
                 <div style="font-size:12px;color: #fff">
-                    <strong style="font-size: 18px;">Object Tracking Test</strong><br>
-                    Testing Object Tracking<br>
-                    Use the ARROW KEYS, WASD or the controls above to move the character<br><br>
+                    <span style="font-size: 18px;">The Binding of Nathan: A Typical Night</span><br>
+                    Nathan and his mother lived alone in a small house on a hill<br>
+                    Use the WASD to move Nathan and ARROW KEYS to fire<br><br>
                 </div>
                 <div class="well center" style="max-width:360px;">
                     Best Score: <span id="high-score-1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -336,7 +471,7 @@
                 </div>
                 <button class="btn btn-success" style="margin-right: 32px;" onclick="reloadPage()">Reload Game</button>
                 <button class="btn btn-danger" style="margin-right: 32px;" onclick="resetScores()">Reset Scores</button>
-                <span style="color: #fff;vertical-align: 3px;">Show Game Stats</span> <input type="checkbox" id="show-stats" checked="checked" /><br>
+                <span style="color: #fff;vertical-align: 3px;">Show Game Stats</span> <input type="checkbox" id="show-stats" /><br>
             </div>
         </div>
     </body>
