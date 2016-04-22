@@ -128,7 +128,7 @@
                 </div>
             </div>
         </div>
-        <!-- Unknown -->
+        <!-- Shopping with Tayla -->
         <div class="col-xs-4">
             <div id="gamemode_costume" class="thumbnail thumbnailFloat">
                 <div class="thumbnailImage" style="background-image: url(assets/img/costume.png);">
@@ -146,6 +146,25 @@
                 <div class="thumbnailAuthors"><small>Greatest Spendings (p1, p2): <span id="costume-best-1">0</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="costume-best-2">0</span></small></div>
                 <div style="padding-top:2%;" class="center">
                     <span><a href="games/costume.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
+                </div>
+            </div>
+        </div>
+        <!-- The Binding of Nathan -->
+        <div class="col-xs-4">
+            <div id="gamemode_binding" class="thumbnail thumbnailFloat">
+                <div class="thumbnailImage" style="background-image: url(assets/img/binding.png);">
+                    <div class="thumbnailBanner">
+                        <span class="thumbnailHeader"><strong>The Binding of Nathan</strong></span><br>
+                        <span class="mapGamemode"><strong>Survive the basement as long as you can</strong></span>
+                    </div>
+                    <div class="thumbnailLabels">
+                        <span class="label label-primary mapLabel">New</span>
+                        <span class="label labelNone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </div>
+                </div>
+                <div class="thumbnailAuthors"><small>Best Score: <span id="binding-best">0</span></small></div>
+                <div style="padding-top:2%;" class="center">
+                    <span><a href="games/binding.html" target="_blank" class="btn btn-info thumbnailButton" role="button">Play Game</a></span>
                 </div>
             </div>
         </div>
@@ -178,6 +197,10 @@
         <div class="col-xs-4">
             <div class="thumbnail thumbnailFloat topMargin black-font">
                 <span class="infoHeader">Recent Changes</span><hr>
+                22-04-16:
+                <ul>
+                    <li>Added <i>The Binding of Nathan</i></li>
+                </ul>
                 20-04-16:
                 <ul>
                     <li>Fix best scores not correctly updating on Blitz</li>
@@ -187,10 +210,6 @@
                 <ul>
                     <li>Added <i>A Very Special Night Shopping with Tayla</i></li>
                     <li>Added <i>Blitz Mode</i></li>
-                </ul>
-                15-04-16:
-                <ul>
-                    <li>Added <i>A Very Special Night at Brendon's</i></li>
                 </ul>
             </div>
         </div>
@@ -206,6 +225,7 @@
                 if (cacheJS.get({id: "valueScoreHigh-brendon"}) == null) {cacheJS.set({id: "valueScoreHigh-brendon"}, 0);}
                 if (cacheJS.get({id: "valueScoreHigh-costume-tayla"}) == null) {cacheJS.set({id: "valueScoreHigh-costume-tayla"}, 0);}
                 if (cacheJS.get({id: "valueScoreHigh-costume-nathan"}) == null) {cacheJS.set({id: "valueScoreHigh-costume-nathan"}, 0);}
+                if (cacheJS.get({id: "valueScoreHigh-binding"}) == null) {cacheJS.set({id: "valueScoreHigh-binding"}, 0);}
                 loadScores();
             }
             // Load high scores into HTML thumbnails
@@ -218,6 +238,7 @@
                 document.getElementById("brendon-best").innerHTML = cacheJS.get({id: "valueScoreHigh-brendon"});
                 document.getElementById("costume-best-1").innerHTML = cacheJS.get({id: "valueScoreHigh-costume-tayla"});
                 document.getElementById("costume-best-2").innerHTML = cacheJS.get({id: "valueScoreHigh-costume-nathan"});
+                document.getElementById("binding-best").innerHTML = cacheJS.get({id: "valueScoreHigh-binding"});
             }
         </script>
     </body>
