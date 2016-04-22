@@ -32,29 +32,46 @@
         <script>
             function startGame() {
                 myGamePiece = new component(30, 40, "player.png", 220, 115, "image");
-                myScore = new component("18px", "Upheavtt", "black", 12, 22, "text");
-                myLives = new component("18px", "Upheavtt", "black", 12, 42, "text");
-                myTimer = new component("12px", "Upheavtt", "black", 190, 16, "text");
-                myStatProjectile = new component("9px", "Upheavtt", "black", 5, 237, "text");
-                myStatPlayer = new component("9px", "Upheavtt", "black", 5, 246, "text");
-                myStatCollection = new component("9px", "Upheavtt", "black", 5, 255, "text");
-                myStatObject = new component("9px", "Upheavtt", "black", 5, 265, "text");
-                myStatVersion = new component("9px", "Upheavtt", "black", 420, 265, "text");
+                myScore = new component("12px", "Upheavtt", "white", 212, 28, "text");
+                myLives = new component("18px", "Upheavtt", "white", 12, 22, "text");
+                myTimer = new component("12px", "Upheavtt", "white", 190, 16, "text");
+                myStatProjectile = new component("9px", "Upheavtt", "white", 5, 237, "text");
+                myStatPlayer = new component("9px", "Upheavtt", "white", 5, 246, "text");
+                myStatCollection = new component("9px", "Upheavtt", "white", 5, 255, "text");
+                myStatObject = new component("9px", "Upheavtt", "white", 5, 265, "text");
+                myStatVersion = new component("9px", "Upheavtt", "white", 420, 265, "text");
+                // Fly Locations
+                flyLeft1 = new component(19, 12, "binding/fly.png", -60, Math.floor(Math.random() * 250) + 1, "image");
+                flyLeft2 = new component(19, 12, "binding/fly.png", -60, Math.floor(Math.random() * 250) + 1, "image");
+                flyLeft3 = new component(19, 12, "binding/fly.png", -60, Math.floor(Math.random() * 250) + 1, "image");
+                flyLeft4 = new component(19, 12, "binding/fly.png", -60, Math.floor(Math.random() * 250) + 1, "image");
+                flyRight1 = new component(19, 12, "binding/fly.png", 540, Math.floor(Math.random() * 250) + 1, "image");
+                flyRight2 = new component(19, 12, "binding/fly.png", 540, Math.floor(Math.random() * 250) + 1, "image");
+                flyRight3 = new component(19, 12, "binding/fly.png", 540, Math.floor(Math.random() * 250) + 1, "image");
+                flyRight4 = new component(19, 12, "binding/fly.png", 540, Math.floor(Math.random() * 250) + 1, "image");
                 myGameArea.start();
                 loadScores();
             }
             
             var myGamePiece;
-            var myObstacles = [];
-            var myObstaclesL = [];
+            var playerFake = [];
             var myCollection = [];
             var playerProjectileL = [];
             var playerProjectileR = [];
             var playerProjectileU = [];
             var playerProjectileD = [];
+            var flyLeft1;
+            var flyLeft2;
+            var flyLeft3;
+            var flyLeft4;
+            var flyRight1;
+            var flyRight2;
+            var flyRight3;
+            var flyRight4;
             var myScore;
             var myStats;
             var myCollectionScore = 0;
+            var killCounter = 0;
             var saltTouched = 0;
             var gameVersion = "0.1.1";
             
@@ -62,10 +79,11 @@
             var totalScore = 0;
             
             var timeRemaining = 120;
-            var intLives = 9999;
+            var intLives = 6;
             var livesRemaining = intLives;
             
             var playerSlowTime = 0;
+            var playerImmuneTime = 0;
             var objectSlowTime = 0;
             
             var myGameArea = {
@@ -193,10 +211,10 @@
                 }
             }
             
-            var xSpeed = 1;
-            var ySpeed = 1;
             var projectileMovement = 0;
-            var projectileRate = 24;
+            var projectileRate = 36;
+            var flySpeed;
+            var flyInt = 86;
             
             function updateGameArea() {
                 var x, y;
@@ -205,7 +223,7 @@
                 var objRate;
                 var objSpeed;
                 var playerSpeed;
-                var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 12.7);
+                var collectionRate = Math.floor(intRate - (myGameArea.frameNo/300) + 34);
                 var collectionSpeed = 2;
                 if (playerSpeed > 2.4) {
                     playerSpeed = 2.4;
@@ -215,7 +233,12 @@
                     playerSpeed = 0.8;
                 } else {
                     playerSlowTime = 0;
-                    playerSpeed = 1.7 + (myCollectionScore/35);
+                    playerSpeed = 1 + (myCollectionScore/35);
+                }
+                if (playerImmuneTime > 0) {
+                    playerImmuneTime -= 1;
+                } else {
+                  
                 }
                 if (objectSlowTime > 0) {
                     objectSlowTime -= 1;
@@ -228,20 +251,60 @@
                 if (objRate < 46) {
                     objRate = 46;
                 }
-                totalScore = Math.round(myGameArea.frameNo/60);
-                for (i = 0; i < myObstacles.length; i += 1) {
-                    if (myGamePiece.crashWith(myObstacles[i])) {
-                        reduceLives();
-                        myObstacles = [];
-                        return;
-                    }
+                flySpeed = flyInt - myCollectionScore;
+                if (flySpeed < 36) {
+                    flySpeed = 36;
                 }
-                for (i = 0; i < myObstaclesL.length; i += 1) {
-                    if (myGamePiece.crashWith(myObstaclesL[i])) {
-                        reduceLives();
-                        myObstaclesL = [];
-                        return;
-                    }
+                totalScore = Math.round(myGameArea.frameNo/60);
+                for (i = 0; i < playerProjectileL.length; i += 1) {
+                    if (flyLeft1.crashWith(playerProjectileL[i])) { flyLeft1.x = -60; flyLeft1.y = Math.floor(Math.random() * 250) + 1; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft2.crashWith(playerProjectileL[i])) { flyLeft2.x = -60; flyLeft2.y = Math.floor(Math.random() * 250) + 1; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft3.crashWith(playerProjectileL[i])) { flyLeft3.x = Math.floor(Math.random() * 460) + 1; flyLeft3.y = -60; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft4.crashWith(playerProjectileL[i])) { flyLeft4.x = Math.floor(Math.random() * 460) + 1; flyLeft4.y = -60; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight1.crashWith(playerProjectileL[i])) { flyRight1.x = 540; flyRight1.y = Math.floor(Math.random() * 250) + 1; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight2.crashWith(playerProjectileL[i])) { flyRight2.x = 540; flyRight2.y = Math.floor(Math.random() * 250) + 1; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight3.crashWith(playerProjectileL[i])) { flyRight3.x = Math.floor(Math.random() * 460) + 1; flyRight3.y = 340; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight4.crashWith(playerProjectileL[i])) { flyRight4.x = Math.floor(Math.random() * 460) + 1; flyRight4.y = 340; playerProjectileL[i].y = -9000; updateKillScore(); return; }
+                }
+                for (i = 0; i < playerProjectileR.length; i += 1) {
+                    if (flyLeft1.crashWith(playerProjectileR[i])) { flyLeft1.x = -60; flyLeft1.y = Math.floor(Math.random() * 250) + 1; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft2.crashWith(playerProjectileR[i])) { flyLeft2.x = -60; flyLeft2.y = Math.floor(Math.random() * 250) + 1; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft3.crashWith(playerProjectileR[i])) { flyLeft3.x = Math.floor(Math.random() * 460) + 1; flyLeft3.y = -60; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft4.crashWith(playerProjectileR[i])) { flyLeft4.x = Math.floor(Math.random() * 460) + 1; flyLeft4.y = -60; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight1.crashWith(playerProjectileR[i])) { flyRight1.x = 540; flyRight1.y = Math.floor(Math.random() * 250) + 1; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight2.crashWith(playerProjectileR[i])) { flyRight2.x = 540; flyRight2.y = Math.floor(Math.random() * 250) + 1; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight3.crashWith(playerProjectileR[i])) { flyRight3.x = Math.floor(Math.random() * 460) + 1; flyRight3.y = 340; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight4.crashWith(playerProjectileR[i])) { flyRight4.x = Math.floor(Math.random() * 460) + 1; flyRight4.y = 340; playerProjectileR[i].y = -9000; updateKillScore(); return; }
+                }
+                for (i = 0; i < playerProjectileD.length; i += 1) {
+                    if (flyLeft1.crashWith(playerProjectileD[i])) { flyLeft1.x = -60; flyLeft1.y = Math.floor(Math.random() * 250) + 1; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                    if (flyLeft2.crashWith(playerProjectileD[i])) { flyLeft2.x = -60; flyLeft2.y = Math.floor(Math.random() * 250) + 1; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                    if (flyLeft3.crashWith(playerProjectileD[i])) { flyLeft3.x = Math.floor(Math.random() * 460) + 1; flyLeft3.y = -60; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                    if (flyLeft4.crashWith(playerProjectileD[i])) { flyLeft4.x = Math.floor(Math.random() * 460) + 1; flyLeft4.y = -60; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                    if (flyRight1.crashWith(playerProjectileD[i])) { flyRight1.x = 540; flyRight1.y = Math.floor(Math.random() * 250) + 1; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                    if (flyRight2.crashWith(playerProjectileD[i])) { flyRight2.x = 540; flyRight2.y = Math.floor(Math.random() * 250) + 1; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                    if (flyRight3.crashWith(playerProjectileD[i])) { flyRight3.x = Math.floor(Math.random() * 460) + 1; flyRight3.y = 340; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                    if (flyRight4.crashWith(playerProjectileD[i])) { flyRight4.x = Math.floor(Math.random() * 460) + 1; flyRight4.y = 340; playerProjectileD[i].y = 9000; updateKillScore(); return; }
+                }
+                for (i = 0; i < playerProjectileU.length; i += 1) {
+                    if (flyLeft1.crashWith(playerProjectileU[i])) { flyLeft1.x = -60; flyLeft1.y = Math.floor(Math.random() * 250) + 1; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft2.crashWith(playerProjectileU[i])) { flyLeft2.x = -60; flyLeft2.y = Math.floor(Math.random() * 250) + 1; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft3.crashWith(playerProjectileU[i])) { flyLeft3.x = Math.floor(Math.random() * 460) + 1; flyLeft3.y = -60; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                    if (flyLeft4.crashWith(playerProjectileU[i])) { flyLeft4.x = Math.floor(Math.random() * 460) + 1; flyLeft4.y = -60; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight1.crashWith(playerProjectileU[i])) { flyRight1.x = 540; flyRight1.y = Math.floor(Math.random() * 250) + 1; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight2.crashWith(playerProjectileU[i])) { flyRight2.x = 540; flyRight2.y = Math.floor(Math.random() * 250) + 1; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight3.crashWith(playerProjectileU[i])) { flyRight3.x = Math.floor(Math.random() * 460) + 1; flyRight3.y = 340; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                    if (flyRight4.crashWith(playerProjectileU[i])) { flyRight4.x = Math.floor(Math.random() * 460) + 1; flyRight4.y = 340; playerProjectileU[i].y = -9000; updateKillScore(); return; }
+                }
+                for (i = 0; i < playerFake.length; i += 1) {
+                    if (flyLeft1.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyLeft1.x = -60; flyLeft1.y = Math.floor(Math.random() * 250) + 1; playerImmuneTime = 80; return; } 
+                    if (flyLeft2.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyLeft2.x = -60; flyLeft2.y = Math.floor(Math.random() * 250) + 1; playerImmuneTime = 80; return; } 
+                    if (flyLeft3.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyLeft3.x = Math.floor(Math.random() * 460) + 1; flyLeft3.y = -60; playerImmuneTime = 80; return; } 
+                    if (flyLeft4.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyLeft4.x = Math.floor(Math.random() * 460) + 1; flyLeft4.y = -60; playerImmuneTime = 80; return; }
+                    if (flyRight1.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyRight1.x = 540; flyRight1.y = Math.floor(Math.random() * 250) + 1; playerImmuneTime = 80; return; } 
+                    if (flyRight2.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyRight2.x = 540; flyRight2.y = Math.floor(Math.random() * 250) + 1; playerImmuneTime = 80; return; } 
+                    if (flyRight3.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyRight3.x = Math.floor(Math.random() * 460) + 1; flyRight3.y = 340; playerImmuneTime = 80; return; } 
+                    if (flyRight4.crashWith(playerFake[i]) && playerImmuneTime <= 0) { reduceLives(); flyRight4.x = Math.floor(Math.random() * 460) + 1; flyRight4.y = 340; playerImmuneTime = 80; return; } 
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     if (myGamePiece.crashWithScore(myCollection[i])) {
@@ -254,66 +317,47 @@
                 function updateCollectionScore() {
                     myCollectionScore += 1;
                 }
+                function updateKillScore() {
+                    killCounter += 1;
+                }
                 function reduceLives() {
                     livesRemaining -= 1;
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
-                // Right Coming Objects
-                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
-                    x = myGameArea.canvas.width;
-                    y = myGameArea.canvas.height - 200;
-                    myObstacles.push(new component(19, 12, "binding/fly.png", x, Math.floor(Math.random() * 250) + 1, "image"));
-                }
-                for (i = 0; i < myObstacles.length; i ++) {
-                    xSpeed = (myGamePiece.x - myObstacles[i].x) / 86;
-                    ySpeed = (myGamePiece.y - myObstacles[i].y) / 86;
-                    myObstacles[i].x += xSpeed;
-                    myObstacles[i].y += ySpeed;
-                    myObstacles[i].update();
-                }
-                // Left Coming Objects
-                if (myGameArea.frameNo == 1 || everyinterval(objRate)) {
-                    x = myGameArea.canvas.width;
-                    y = myGameArea.canvas.height - 200;
-                    myObstaclesL.push(new component(19, 12, "binding/fly.png", -60, Math.floor(Math.random() * 250) + 1, "image"));
-                }
-                for (i = 0; i < myObstaclesL.length; i ++) {
-                    xSpeed = (myGamePiece.x - myObstaclesL[i].x) / 86;
-                    ySpeed = (myGamePiece.y - myObstaclesL[i].y) / 86;
-                    myObstaclesL[i].x += xSpeed;
-                    myObstaclesL[i].y += ySpeed;
-                    myObstaclesL[i].update();
-                }
                 if (myGameArea.frameNo == 1 || everyinterval(collectionRate)) {
                     x = myGameArea.canvas.width;
                     y = myGameArea.canvas.height - 200;
-                    myCollection.push(new component(12, 21, "binding/mushroom.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
+                    myCollection.push(new component(18, 13, "binding/penny.png", Math.floor(Math.random() * 450), Math.floor(Math.random() * 240) + 1, "image"));
                 }
                 for (i = 0; i < myCollection.length; i += 1) {
                     myCollection[i].update();
                 }
-                realScore = (myCollectionScore*8) + totalScore;
+                realScore = (12 + (myCollectionScore * 8) + (killCounter * 2)) - totalScore;
                 timeRemaining -= 1/60;
                 myScore.text = "Score: " + realScore;
                 myScore.update();
-                myTimer.text = "Time elapsed: " + totalScore + "s";
+                myTimer.text = "Time elapsed: " + totalScore + " s";
                 myTimer.update();
-                myLives.text = "Health: " + livesRemaining + "/" + intLives;
+                if (playerImmuneTime < 1) {
+                    myLives.text = "♥ " + livesRemaining + "/" + intLives;
+                } else {
+                    myLives.text = "♡ " + livesRemaining + "/" + intLives;
+                }
                 myLives.update();
                 var enableStat = document.getElementById("show-stats").checked;
                 if (enableStat) {
-                    myStatProjectile.text = "Projectile Stats: fire rate = " + projectileRate + ", movement speed = " + projectileMovement;
+                    myStatProjectile.text = "Projectile Stats: fire delay = " + projectileRate + " intervals, projectile speed = " + projectileMovement;
                     myStatProjectile.update();
-                    if (playerSlowTime < 1) {
+                    if (playerImmuneTime < 1) {
                         myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed;
                     } else {
-                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed + ", slow duration = " + playerSlowTime;
+                        myStatPlayer.text = "Player Stats: objects collected = " + myCollectionScore + ", movement speed = " + playerSpeed + ", immunity duration = " + playerImmuneTime;
                     }
                     myStatPlayer.update();
                     myStatCollection.text = "Collectable Stats: spawn delay = " + collectionRate + " intervals, movement speed = " + collectionSpeed;
                     myStatCollection.update();
-                    myStatObject.text = "Obstacles Stats: spawn delay = " + objRate + " intervals, movement speed = " + objSpeed;
+                    myStatObject.text = "Fly Stats: count = 8, movement speed = " + flySpeed + ", fly kills = " + killCounter;
                     myStatObject.update();
                 }
                 myStatVersion.text = "version " + gameVersion;
@@ -324,17 +368,71 @@
                 if (myGameArea.keys && myGameArea.keys[68] || checkMoveright) {myGamePiece.speedX = playerSpeed; }
                 if (myGameArea.keys && myGameArea.keys[87] || checkMoveup) {myGamePiece.speedY = -playerSpeed; }
                 if (myGameArea.keys && myGameArea.keys[83] || checkMovedown) {myGamePiece.speedY = playerSpeed; }
+                // Fly Movement
+                var flyLeft1x = (myGamePiece.x - flyLeft1.x) / flySpeed;
+                var flyLeft1y = (myGamePiece.y - flyLeft1.y) / flySpeed;
+                flyLeft1.x += flyLeft1x;
+                flyLeft1.y += flyLeft1y;
+                flyLeft1.update();
+                var flyLeft2x = (myGamePiece.x - flyLeft2.x) / flySpeed;
+                var flyLeft2y = (myGamePiece.y - flyLeft2.y) / flySpeed;
+                flyLeft2.x += flyLeft2x;
+                flyLeft2.y += flyLeft2y;
+                flyLeft2.update();
+                var flyLeft3x = (myGamePiece.x - flyLeft3.x) / flySpeed;
+                var flyLeft3y = (myGamePiece.y - flyLeft3.y) / flySpeed;
+                flyLeft3.x += flyLeft3x;
+                flyLeft3.y += flyLeft3y;
+                flyLeft3.update();
+                var flyLeft4x = (myGamePiece.x - flyLeft4.x) / flySpeed;
+                var flyLeft4y = (myGamePiece.y - flyLeft4.y) / flySpeed;
+                flyLeft4.x += flyLeft4x;
+                flyLeft4.y += flyLeft4y;
+                flyLeft4.update();
+                var flyRight1x = (myGamePiece.x - flyRight1.x) / flySpeed;
+                var flyRight1y = (myGamePiece.y - flyRight1.y) / flySpeed;
+                flyRight1.x += flyRight1x;
+                flyRight1.y += flyRight1y;
+                flyRight1.update();
+                var flyRight2x = (myGamePiece.x - flyRight2.x) / flySpeed;
+                var flyRight2y = (myGamePiece.y - flyRight2.y) / flySpeed;
+                flyRight2.x += flyRight2x;
+                flyRight2.y += flyRight2y;
+                flyRight2.update();
+                var flyRight3x = (myGamePiece.x - flyRight3.x) / flySpeed;
+                var flyRight3y = (myGamePiece.y - flyRight3.y) / flySpeed;
+                flyRight3.x += flyRight3x;
+                flyRight3.y += flyRight3y;
+                flyRight3.update();
+                var flyRight4x = (myGamePiece.x - flyRight4.x) / flySpeed;
+                var flyRight4y = (myGamePiece.y - flyRight4.y) / flySpeed;
+                flyRight4.x += flyRight4x;
+                flyRight4.y += flyRight4y;
+                flyRight4.update();
                 
                 projectileMovement = playerSpeed * 1.62;
+                if (projectileRate > 12) {
+                    projectileRate = 36 - myCollectionScore;
+                } else {
+                    projectileRate = 12;
+                }
+                // Fake Player Collision
+                if (myGameArea.frameNo == 1) {
+                    x = myGameArea.canvas.width;
+                    y = myGameArea.canvas.height - 200;
+                    playerFake.push(new component(28, 38, "binding/fake-player.png", x, Math.floor(Math.random() * 250) + 1, "image"));
+                }
+                for (i = 0; i < playerFake.length; i += 1) {
+                    playerFake[i].x = myGamePiece.x + 1;
+                    playerFake[i].y = myGamePiece.y + 1;
+                    playerFake[i].update();
+                }
                 // Projectile Left
                 if (myGameArea.keys && myGameArea.keys[37] || checkMoveright) {
                     if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
                         x = myGamePiece.x;
                         y = myGamePiece.y;
-                        playerProjectileL.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
-                        if (playerProjectileL[i].x = myObstacles[i].x) {
-                            myObstacles[i].y = -9000;
-                        }
+                        playerProjectileL.push(new component(13, 13, "binding/projectile.png", x, y, "image"));
                     }
                 }
                 for (i = 0; i < playerProjectileL.length; i += 1) {
@@ -347,7 +445,7 @@
                     if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
                         x = myGamePiece.x;
                         y = myGamePiece.y;
-                        playerProjectileR.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
+                        playerProjectileR.push(new component(13, 13, "binding/projectile.png", x, y, "image"));
                     }
                 }
                 for (i = 0; i < playerProjectileR.length; i += 1) {
@@ -360,7 +458,7 @@
                     if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
                         x = myGamePiece.x;
                         y = myGamePiece.y;
-                        playerProjectileU.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
+                        playerProjectileU.push(new component(13, 13, "binding/projectile.png", x, y, "image"));
                     }
                 }
                 for (i = 0; i < playerProjectileU.length; i += 1) {
@@ -373,7 +471,7 @@
                     if (myGameArea.frameNo == 1 || everyinterval(projectileRate)) {
                         x = myGamePiece.x;
                         y = myGamePiece.y;
-                        playerProjectileD.push(new component(26, 26, "binding/projectile.png", x, y, "image"));
+                        playerProjectileD.push(new component(13, 13, "binding/projectile.png", x, y, "image"));
                     }
                 }
                 for (i = 0; i < playerProjectileD.length; i += 1) {
@@ -389,7 +487,6 @@
                     myGameArea.stop();
                     return;
                 }
-                console.log(playerProjectileL[i].x);
             }
             var checkMoveup = false;
             var checkMovedown = false;
@@ -432,24 +529,24 @@
             }
             
             function updateScores() {
-                cacheJS.set({id: "valueScoreRecent-blitz"}, realScore);
-                if (cacheJS.get({id: "valueScoreHigh-blitz"}) == null) {
-                    cacheJS.set({id: "valueScoreHigh-blitz"}, realScore);
-                } else if (realScore > cacheJS.get({id: "valueScoreHigh-blitz"})) {
-                    cacheJS.set({id: "valueScoreHigh-blitz"}, realScore);
+                cacheJS.set({id: "valueScoreRecent-binding"}, realScore);
+                if (cacheJS.get({id: "valueScoreHigh-binding"}) == null) {
+                    cacheJS.set({id: "valueScoreHigh-binding"}, realScore);
+                } else if (realScore > cacheJS.get({id: "valueScoreHigh-binding"})) {
+                    cacheJS.set({id: "valueScoreHigh-binding"}, realScore);
                 }
                 loadScores();
             }
             
             function resetScores() {
-                cacheJS.set({id: "valueScoreHigh-blitz"}, 0);
-                cacheJS.set({id: "valueScoreRecent-blitz"}, 0);
+                cacheJS.set({id: "valueScoreHigh-binding"}, 0);
+                cacheJS.set({id: "valueScoreRecent-binding"}, 0);
                 loadScores();
             }
             
             function loadScores() {
-                document.getElementById("recent-score-1").innerHTML = cacheJS.get({id: "valueScoreRecent-blitz"});
-                document.getElementById("high-score-1").innerHTML = cacheJS.get({id: "valueScoreHigh-blitz"});
+                document.getElementById("recent-score-1").innerHTML = cacheJS.get({id: "valueScoreRecent-binding"});
+                document.getElementById("high-score-1").innerHTML = cacheJS.get({id: "valueScoreHigh-binding"});
             }
         </script>
         <br>
