@@ -1,5 +1,5 @@
 * {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
@@ -152,7 +152,6 @@ canvas {
 }
 
 .infoHeader {
-    padding-left: 12px;
     font-size: 18px;
     vertical-align: middle;
 }
